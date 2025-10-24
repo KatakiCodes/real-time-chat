@@ -22,4 +22,4 @@ ENV ASPNETCORE_URLS=https://+:5001
 COPY --from=build /app/publish ./
 
 # Ajuste o nome do DLL abaixo se necessário (substitua MyApi.dll pelo nome real)
-ENTRYPOINT ["dotnet", "MyApi.dll"]
+ENTRYPOINT ["dotnet", "realtime-chat-api.dll"]
