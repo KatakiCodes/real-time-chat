@@ -7,17 +7,17 @@ public class Chat : Entity
 {
     public User Admin { get; private set; }
     public string Name { get; private set; }
-    public int Code { get; private set; }
+    public string Code { get; private set; }
     public Chat()
     { }
-    public Chat(User admin, string name, int code)
+    public Chat(User admin, string name, string code)
     {
         DomainException.When(admin is null, "Admin cannot be empty");
         Name = name;
         Admin = admin!;
         Code = code;
     }
-    public Chat(Guid id, User admin, string name, int code) : base(id)
+    public Chat(Guid id, User admin, string name, string code) : base(id)
     {
         DomainException.When(admin is null, "Admin cannot be empty");
         Name = name;

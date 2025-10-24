@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "realtime-chat-api", "realtime-chat-api\realtime-chat-api.csproj", "{9B48F0DA-A65B-41ED-8E0F-B540850D341A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "realtime-chat-tests", "realtime-chat-tests\realtime-chat-tests.csproj", "{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{9B48F0DA-A65B-41ED-8E0F-B540850D341A}.Release|x64.Build.0 = Release|Any CPU
 		{9B48F0DA-A65B-41ED-8E0F-B540850D341A}.Release|x86.ActiveCfg = Release|Any CPU
 		{9B48F0DA-A65B-41ED-8E0F-B540850D341A}.Release|x86.Build.0 = Release|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Debug|x64.Build.0 = Debug|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Debug|x86.Build.0 = Debug|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Release|x64.ActiveCfg = Release|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Release|x64.Build.0 = Release|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Release|x86.ActiveCfg = Release|Any CPU
+		{6D89C634-BAF6-4760-9E90-2EAED6F5FF3A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
