@@ -25,7 +25,7 @@ public class Message : Entity
         Date = DateTime.UtcNow;
         State = EMessageState.Sent;
     }
-    public Message(Guid id, User user, Chat chat, string content) : base(id)
+    public Message(int id, User user, Chat chat, string content) : base(id)
     {
         DomainException.When(user is null, "User cannot be empty");
         DomainException.When(chat is null, "Chat cannot be empty");

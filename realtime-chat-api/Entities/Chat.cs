@@ -17,7 +17,7 @@ public class Chat : Entity
         Admin = admin!;
         Code = code;
     }
-    public Chat(Guid id, User admin, string name, string code) : base(id)
+    public Chat(int id, User admin, string name, string code) : base(id)
     {
         DomainException.When(admin is null, "Admin cannot be empty");
         Name = name;
