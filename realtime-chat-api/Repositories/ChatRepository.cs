@@ -1,6 +1,6 @@
 using System;
-using realtime_chat_api.DTOs.Requests;
-using realtime_chat_api.DTOs.Responses;
+using Microsoft.EntityFrameworkCore;
+using realtime_chat_api.Data;
 using realtime_chat_api.Entities;
 using realtime_chat_api.Repositories.Interface;
 
@@ -8,23 +8,27 @@ namespace realtime_chat_api.Repositories;
 
 public class ChatRepository : IChatRepository
 {
-    public Chat CreateAsync(Chat entity)
+    private readonly AppDbContext _Context;
+    public ChatRepository(AppDbContext context)
     {
-        throw new NotImplementedException();
+        _Context = context;
+    }
+    public async Task<Chat> CreateAsync(Chat entity)
+    {
+        await _Context.Chats.AddAsync(entity);
+        await _Context.SaveChangesAsync();
+        return entity;
     }
 
-    public Chat GetByIdAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<Chat?> GetByIdAsync(int id)=> await _Context.Chats.FindAsync(id);
 
-    public IEnumerable<Chat> GetChatsByUserIdAsync(int userId)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IEnumerable<Chat>> GetChatsByUserIdAsync(int userId)=> await _Context.Chats.AsNoTracking()
+            .Where(c => c.AdminId == userId).ToListAsync();
 
-    public Chat UpdateAsync(Chat entity)
+    public async Task<Chat> UpdateAsync(Chat entity)
     {
-        throw new NotImplementedException();
+        _Context.Chats.Update(entity);
+        await _Context.SaveChangesAsync();
+        return entity;
     }
 }

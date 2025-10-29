@@ -6,6 +6,7 @@ public class User : Entity
 {
     public string email { get; private set; }
     public string Username { get; private set; }
+    public List<Chat> AdministeredChats { get; private set; }
 
     public User()
     { }

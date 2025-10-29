@@ -5,5 +5,5 @@ namespace realtime_chat_api.Repositories.Interface;
 
 public interface IChatRepository : IBaseRepository<Chat>
 {
-    public IEnumerable<Chat> GetChatsByUserIdAsync(int userId);
+    public Task<IEnumerable<Chat>> GetChatsByUserIdAsync(int userId);
 }

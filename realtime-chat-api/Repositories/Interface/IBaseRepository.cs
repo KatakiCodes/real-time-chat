@@ -4,7 +4,7 @@ namespace realtime_chat_api.Repositories.Interface;
 
 public interface IBaseRepository<T> where T : class
 {
-    public T GetByIdAsync(int id);
-    public T CreateAsync(T entity);
-    public T UpdateAsync(T entity);
+    public Task<T?> GetByIdAsync(int id);
+    public Task<T> CreateAsync(T entity);
+    public Task<T> UpdateAsync(T entity);
 }

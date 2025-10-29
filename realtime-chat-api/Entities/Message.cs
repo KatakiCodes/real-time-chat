@@ -6,6 +6,8 @@ namespace realtime_chat_api.Entities;
 
 public class Message : Entity
 {
+    public int UserId { get; private set; }
+    public int ChatId { get; private set; }
     public User User { get; private set; }
     public Chat Chat { get; private set; }
     public string Content { get; private set; }
@@ -21,6 +23,8 @@ public class Message : Entity
         DomainException.When(string.IsNullOrEmpty(content), "Content cannot be empty");
         User = user!;
         Chat = chat!;
+        UserId = user!.Id;
+        ChatId = chat!.Id;
         Content = content;
         Date = DateTime.UtcNow;
         State = EMessageState.Sent;

@@ -1,4 +1,5 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 using realtime_chat_api.Data;
 using realtime_chat_api.Entities;
 using realtime_chat_api.Repositories.Interface;
@@ -13,18 +14,23 @@ public class UserRepository : IBaseRepository<User>
         _context = context;
     }
 
-    public User CreateAsync(User entity)
+    public async Task<User> CreateAsync(User entity)
     {
-        throw new NotImplementedException();
+        await _context.Users.AddAsync(entity);
+        await _context.SaveChangesAsync();
+        return entity;
     }
 
-    public User GetByIdAsync(int id)
+    public async Task<User?> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        User? findUser = await _context.Users.FindAsync(id);
+        return findUser;
     }
 
-    public User UpdateAsync(User entity)
+    public async Task<User> UpdateAsync(User entity)
     {
-        throw new NotImplementedException();
+        _context.Users.Update(entity);
+        await _context.SaveChangesAsync();
+        return entity;
     }
 }
