@@ -6,7 +6,7 @@ using realtime_chat_api.Repositories.Interface;
 
 namespace realtime_chat_api.Repositories;
 
-public class UserRepository : IBaseRepository<User>
+public class UserRepository : IUserRepository
 {
     private readonly AppDbContext _context;
     public UserRepository(AppDbContext context)
