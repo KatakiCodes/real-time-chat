@@ -8,22 +8,22 @@ namespace realtime_chat_api.Repositories;
 
 public class ChatRepository : IChatRepository
 {
-    public Chat Create(Chat entity)
+    public Chat CreateAsync(Chat entity)
     {
         throw new NotImplementedException();
     }
 
-    public Chat GetById(int id)
+    public Chat GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public IEnumerable<Chat> GetChatsByUserId(int userId)
+    public IEnumerable<Chat> GetChatsByUserIdAsync(int userId)
     {
         throw new NotImplementedException();
     }
 
-    public Chat Update(Chat entity)
+    public Chat UpdateAsync(Chat entity)
     {
         throw new NotImplementedException();
     }

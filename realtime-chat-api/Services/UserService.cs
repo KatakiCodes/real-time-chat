@@ -6,7 +6,7 @@ namespace realtime_chat_api.Services;
 
 public class UserService : IUserService
 {
-    public User Create(User user)
+    public User CreateAsync(User user)
     {
         throw new NotImplementedException();
     }
@@ -16,7 +16,7 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public User UpdateUserName(User user)
+    public User UpdateUserNameAsync(User user)
     {
         throw new NotImplementedException();
     }

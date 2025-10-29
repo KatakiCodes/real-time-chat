@@ -1,6 +1,4 @@
 using System;
-using realtime_chat_api.DTOs.Requests;
-using realtime_chat_api.DTOs.Responses;
 using realtime_chat_api.Entities;
 using realtime_chat_api.Repositories.Interface;
 
@@ -8,22 +6,22 @@ namespace realtime_chat_api.Repositories;
 
 public class MessageRepository : IMessageRepository
 {
-    public Message Create(Message entity)
+    public Message CreateAsync(Message entity)
     {
         throw new NotImplementedException();
     }
 
-    public Message GetById(int id)
+    public Message GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public IEnumerable<Message> GetMessagesByChatId(int chatId)
+    public IEnumerable<Message> GetMessagesByChatIdAsync(int chatId)
     {
         throw new NotImplementedException();
     }
 
-    public Message Update(Message entity)
+    public Message UpdateAsync(Message entity)
     {
         throw new NotImplementedException();
     }
