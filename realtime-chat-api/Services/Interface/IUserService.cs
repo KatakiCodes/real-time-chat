@@ -5,7 +5,7 @@ namespace realtime_chat_api.Services.Interface;
 
 public interface IUserService
 {
-    public User GetByIdAsync(int userId);
-    public User CreateAsync(User user);
-    public User UpdateUserNameAsync(User user);
+    public Task<User?> GetByIdAsync(int userId);
+    public Task<User> CreateAsync(User user);
+    public Task<User> UpdateUserNameAsync(User user);
 }

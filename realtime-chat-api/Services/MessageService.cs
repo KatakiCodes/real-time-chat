@@ -1,23 +1,21 @@
 using System;
 using realtime_chat_api.Entities;
+using realtime_chat_api.Repositories.Interface;
 using realtime_chat_api.Services.Interface;
 
 namespace realtime_chat_api.Services;
 
 public class MessageService : IMessageService
 {
-    public Message CreateAsync(Message dto)
+    private IMessageRepository _Repository;
+    public MessageService(IMessageRepository repository)
     {
-        throw new NotImplementedException();
+        _Repository = repository;
     }
 
-    public Message EditMessageContentAsync(Message dto)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<Message> CreateAsync(Message message)=> await _Repository.CreateAsync(message);
 
-    public IEnumerable<Message> GetByChatIdAsync(int chatId)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<Message> EditMessageContentAsync(Message message)=> _Repository.UpdateAsync(message);
+
+    public Task<IEnumerable<Message>> GetByChatIdAsync(int chatId)=> _Repository.GetMessagesByChatIdAsync(chatId);
 }

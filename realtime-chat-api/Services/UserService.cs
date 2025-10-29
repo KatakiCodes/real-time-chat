@@ -1,23 +1,21 @@
 using System;
 using realtime_chat_api.Entities;
+using realtime_chat_api.Repositories;
 using realtime_chat_api.Services.Interface;
 
 namespace realtime_chat_api.Services;
 
 public class UserService : IUserService
 {
-    public User CreateAsync(User user)
+    private IUserRepository _Repository;
+    public UserService(IUserRepository repository)
     {
-        throw new NotImplementedException();
+        _Repository = repository;
     }
 
-    public User GetByIdAsync(int userId)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<User> CreateAsync(User user)=> await _Repository.CreateAsync(user);
 
-    public User UpdateUserNameAsync(User user)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<User?> GetByIdAsync(int userId) => await _Repository.GetByIdAsync(userId);
+
+    public async Task<User> UpdateUserNameAsync(User user)=> await _Repository.UpdateAsync(user);
 }

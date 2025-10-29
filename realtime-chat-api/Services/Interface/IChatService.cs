@@ -5,8 +5,8 @@ namespace realtime_chat_api.Services.Interface;
 
 public interface IChatService
 {
-    public Chat GetByIdAsync(int chatId);
-    public IEnumerable<Chat> GetByUserIdAsync(int userId);
-    public Chat CreateAsync(Chat chat);
-    public Chat UpdateChatNameAsync(Chat chat);
+    public Task<Chat?> GetByIdAsync(int chatId);
+    public Task<IEnumerable<Chat>> GetByUserIdAsync(int userId);
+    public Task<Chat> CreateAsync(Chat chat);
+    public Task<Chat> UpdateChatNameAsync(Chat chat);
 }
