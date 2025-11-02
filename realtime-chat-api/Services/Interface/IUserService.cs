@@ -1,11 +1,12 @@
 using System;
-using realtime_chat_api.Entities;
+using realtime_chat_api.DTOs.Requests;
+using realtime_chat_api.DTOs.Responses;
 
 namespace realtime_chat_api.Services.Interface;
 
 public interface IUserService
 {
-    public Task<User?> GetByIdAsync(int userId);
-    public Task<User> CreateAsync(User user);
-    public Task<User> UpdateUserNameAsync(User user);
+    public Task<ResponseModel<UserResponse?>> GetByIdAsync(int userId);
+    public Task<ResponseModel<UserResponse>> CreateAsync(CreateUserRequest request);
+    public Task<ResponseModel<UserResponse>> UpdateUserNameAsync(UpdateUsernameRequest request);
 }

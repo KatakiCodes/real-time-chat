@@ -9,7 +9,7 @@ public class Chat : Entity
     public User Admin { get; private set; }
     public string Name { get; private set; }
     public string Code { get; private set; }
-    private List<Message> _Messages { get; set; }
+    private List<Message> Messages { get; set; }
     public Chat()
     { }
     public Chat(User admin, string name, string code)
@@ -33,11 +33,4 @@ public class Chat : Entity
         DomainException.When(string.IsNullOrEmpty(name), "Chat name cannot be empty");
         this.Name = name;
     }
-
-    public void setMessages(Message message)
-    {
-        DomainException.When(message is null, "Message cannot be null");
-        _Messages.Add(message!);
-    }
-    public IEnumerable<Message> getMessages()=> _Messages.AsEnumerable();
 }

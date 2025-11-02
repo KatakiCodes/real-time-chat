@@ -2,9 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace realtime_chat_api.DTOs.Requests;
 
-public record class UpdateMessageDto
+public record class UpdateMessageRequest
 {
     [Required]
-    public int id { get; init; }
+    public int Id { get; init; }
+    [Required]
     public string Content { get; init; } = string.Empty;
 }
