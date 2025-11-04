@@ -57,6 +57,6 @@ public class MessageService : IMessageService
         List<MessageResponse> response = [];
         foreach (Message message in messages)
             response.Add(_Mapper.Map<MessageResponse>(message));
-            return new ResponseModel<IEnumerable<MessageResponse>>().OK(response);
+        return new ResponseModel<IEnumerable<MessageResponse>>().OK(response);
     }
 }

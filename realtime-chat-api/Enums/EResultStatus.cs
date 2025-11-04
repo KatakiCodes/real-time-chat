@@ -6,5 +6,6 @@ public enum EResultStatus
      CREATED = 201,
      NOTFOUND = 404,
      BADREQUEST = 400,
-     UNAUTHORIZED = 401
+     UNAUTHORIZED = 401,
+     INTERNALSERVERERROR = 500
 }

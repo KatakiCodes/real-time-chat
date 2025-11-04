@@ -2,6 +2,7 @@ using System;
 using AutoMapper;
 using realtime_chat_api.DTOs.Requests;
 using realtime_chat_api.DTOs.Responses;
+using realtime_chat_api.DTOs.Validations;
 using realtime_chat_api.Entities;
 using realtime_chat_api.Repositories;
 using realtime_chat_api.Services.Interface;
@@ -22,11 +23,16 @@ public class UserService : IUserService
 
     public async Task<ResponseModel<UserResponse>> CreateAsync(CreateUserRequest request)
     {
-        User user = _Mapper.Map<User>(request);
-
-        user = await _Repository.CreateAsync(user);
-        UserResponse response = _Mapper.Map<UserResponse>(user);
-        return ResponseModel.CREATED(response)!;
+        using(CreateUserRequestValidation validator = new ())
+        {
+            var validatioResult = validator.Validate(request);
+            if(!validatioResult.IsValid)
+                return new ResponseModel<IEnumerable<string>>().BADREQUEST([.. validatioResult.Errors.Select(e=>e.ErrorMessage)])
+            User user = _Mapper.Map<User>(request);
+            user = await _Repository.CreateAsync(user);
+            UserResponse response = _Mapper.Map<UserResponse>(user);
+            return ResponseModel.CREATED(response)!;
+        }
     }
 
     public async Task<ResponseModel<UserResponse?>> GetByIdAsync(int userId)

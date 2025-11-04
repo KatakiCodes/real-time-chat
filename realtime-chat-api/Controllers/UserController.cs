@@ -24,14 +24,11 @@ namespace realtime_chat_api.Controllers
         {
             try
             {
-                var findUser = await _UserService.GetByIdAsync(id);
-                if (findUser is null)
-                    return NotFound("User not found.");
-                UserResponse response = new(findUser.Id, findUser.Username, findUser.Email);
-                return Ok(new ResponseModel<UserResponse>(true, response));
+                var response = await _UserService.GetByIdAsync(id);
+                return StatusCode((int)response.Status, response.Data);
             }
             catch(Exception){
-                return StatusCode(500, new ResponseModel<UserResponse>(["An unexpected error occurred."]));
+                return StatusCode(500, "An unexpected error occurred.");
             }
         }
 

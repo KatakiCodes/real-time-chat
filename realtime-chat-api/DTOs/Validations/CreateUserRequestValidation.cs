@@ -4,7 +4,7 @@ using realtime_chat_api.DTOs.Requests;
 
 namespace realtime_chat_api.DTOs.Validations;
 
-public class CreateUserRequestValidation : AbstractValidator<CreateUserRequest>
+public class CreateUserRequestValidation : AbstractValidator<CreateUserRequest>, IDisposable
 {
     public CreateUserRequestValidation()
     {
@@ -12,4 +12,7 @@ public class CreateUserRequestValidation : AbstractValidator<CreateUserRequest>
         RuleFor(p => p.Username).NotNull().NotEmpty();
         RuleFor(p => p.Password).NotNull().NotEmpty().MinimumLength(6);
     }
+
+    public void Dispose()
+    {}
 }
