@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using realtime_chat_api.DomainExceptions;
 using realtime_chat_api.DTOs.Requests;
 using realtime_chat_api.DTOs.Responses;
-using realtime_chat_api.Entities;
 using realtime_chat_api.Services.Interface;
 
 namespace realtime_chat_api.Controllers
@@ -28,7 +27,7 @@ namespace realtime_chat_api.Controllers
                 return StatusCode((int)response.Status, response.Data);
             }
             catch(Exception){
-                return StatusCode(500, "An unexpected error occurred.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
             }
         }
 
@@ -37,21 +36,18 @@ namespace realtime_chat_api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ResponseModel<UserResponse>>> CreateUser([FromBody] CreateUserRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(new ResponseModel<UserResponse>([.. ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)]));
             try
             {
-                User userCreated = await _UserService.CreateAsync(request);
-                UserResponse response = new(userCreated.Id, userCreated.Username, userCreated.Email);
-                return StatusCode(201, new ResponseModel<UserResponse>(true, response));
+                var operationResult = await _UserService.CreateAsync(request);
+                return StatusCode((int)operationResult.Status, operationResult.Data);
             }
             catch (DomainException ex)
             {
-                return BadRequest(new ResponseModel<UserResponse>([ex.Message]));
+                return BadRequest(new ResponseModel<UserResponse>().BADREQUEST([ex.Message]));
             }
             catch (Exception)
             {
-                return StatusCode(500, new ResponseModel<UserResponse>(["An unexpected error occurred."]));
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<UserResponse>().INTERNALSERVERERROR(["An unexpected error occurred."]));
             }
         }
         
@@ -61,30 +57,24 @@ namespace realtime_chat_api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ResponseModel<UserResponse>>> UpdateUserName([FromBody] UpdateUsernameRequest request)
         {
-            if(!ModelState.IsValid)
-                return BadRequest(new ResponseModel<UserResponse>([.. ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)]));
             try
             {
                 int tryGetUserId = int.Parse(User.FindFirst("sub")?.Value ?? "0");
                 if (tryGetUserId == 0)
-                    return Unauthorized(new ResponseModel<UserResponse>(["Invalid token."]));
+                    return Unauthorized(new ResponseModel<UserResponse>().UNAUTHORIZED(["Invalid token."]));
                     
                 request.SetUserId(tryGetUserId);
 
-                User? userUpdate = await _UserService.UpdateUserNameAsync(request);
+                var operationResult = await _UserService.UpdateUserNameAsync(request);
 
-                if (userUpdate is null)
-                    return NotFound("User not found.");
-
-                UserResponse response = new(userUpdate.Id, userUpdate.Username, userUpdate.Email);
-                return Ok(new ResponseModel<UserResponse>(true, response));
+                return StatusCode((int)operationResult.Status, operationResult.Data);
             }
             catch(DomainException ex)
             {
-                return BadRequest(new ResponseModel<UserResponse>([ex.Message]));
+                return BadRequest(new ResponseModel<UserResponse>().BADREQUEST([ex.Message]));
             }
             catch(Exception){
-                return StatusCode(500, new ResponseModel<UserResponse>(["An unexpected error occurred."]));
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<UserResponse>().INTERNALSERVERERROR(["An unexpected error occurred."]));
             }
         }
     }
