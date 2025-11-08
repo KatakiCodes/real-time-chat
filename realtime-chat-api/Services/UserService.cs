@@ -26,9 +26,9 @@ public class UserService : IUserService
     {
         using(CreateUserRequestValidation validator = new ())
         {
-            var validatioResult = validator.Validate(request);
-            if (!validatioResult.IsValid)
-                return ResponseModel.BADREQUEST(validatioResult.Errors.Select(x => x.ErrorMessage));
+            var validationResult = validator.Validate(request);
+            if (!validationResult.IsValid)
+                return ResponseModel.BADREQUEST(validationResult.Errors.Select(x => x.ErrorMessage));
 
             User user = _Mapper.Map<User>(request);
             user = await _Repository.CreateAsync(user);
@@ -53,9 +53,9 @@ public class UserService : IUserService
             
         using(var validator = new UpdateUsernameRequestValidation())
         {
-            var validatioResult = validator.Validate(request);
-            if (!validatioResult.IsValid)
-                return ResponseModel.BADREQUEST(validatioResult.Errors.Select(x => x.ErrorMessage));
+            var validationResult = validator.Validate(request);
+            if (!validationResult.IsValid)
+                return ResponseModel.BADREQUEST(validationResult.Errors.Select(x => x.ErrorMessage));
             findUser.UpdateUserName(request.Username);
             await _Repository.UpdateAsync(findUser);
             UserResponse response = _Mapper.Map<UserResponse>(findUser);
