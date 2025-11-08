@@ -14,5 +14,6 @@ public ResponseModel<T> OK(T data) => new() { Data = data, Status = EResultStatu
     public ResponseModel<T> NOTFOUND(IEnumerable<string> errors) => new() { Status = EResultStatus.NOTFOUND, Errors = errors ?? [] };
     public ResponseModel<T> BADREQUEST(IEnumerable<string> errors) => new() { Status = EResultStatus.BADREQUEST, Errors = errors ?? [] };
     public ResponseModel<T> UNAUTHORIZED(IEnumerable<string> errors) => new() { Status = EResultStatus.UNAUTHORIZED, Errors = errors ?? [] };
+    public ResponseModel<T> INTERNALSERVERERROR(IEnumerable<string> errors) => new() { Status = EResultStatus.INTERNALSERVERERROR, Errors = errors ?? [] };
    
 }
