@@ -1,6 +1,7 @@
 using AutoMapper;
 using realtime_chat_api.DTOs.Requests;
 using realtime_chat_api.DTOs.Responses;
+using realtime_chat_api.DTOs.Validations;
 using realtime_chat_api.Entities;
 using realtime_chat_api.Repositories.Interface;
 using realtime_chat_api.Services.Interface;
@@ -24,12 +25,20 @@ public class ChatService : IChatService
 
     public async Task<ResponseModel<ChatResponse?>> CreateAsync(CreateChatRequest request)
     {
-        ResponseModel<UserResponse?> findUser = await _UserService.GetByIdAsync(request.GetUserId());
-        if (findUser.Data is null)
-            return ResponseModel.UNAUTHORIZED(["Invalid user"]);
-        Chat chat = _Mapper.Map<Chat>(request);
-        chat = await _Repository.CreateAsync(chat);
-        return ResponseModel.CREATED(_Mapper.Map<ChatResponse>(chat));
+        using(var validator = new CreateChatRequestValidation())
+        {
+            var validationResult = validator.Validate(request);
+            if (!validationResult.IsValid)
+                return ResponseModel.BADREQUEST(validationResult.Errors.Select(e => e.ErrorMessage));
+
+            ResponseModel<UserResponse?> findUser = await _UserService.GetByIdAsync(request.GetUserId());
+            if (findUser.Data is null)
+                return ResponseModel.UNAUTHORIZED(["Invalid user"]);
+
+            Chat chat = _Mapper.Map<Chat>(request);
+            chat = await _Repository.CreateAsync(chat);
+            return ResponseModel.CREATED(_Mapper.Map<ChatResponse>(chat));
+        }
     }
 
     public async Task<ResponseModel<ChatResponse?>> GetByIdAsync(int chatId)
@@ -50,11 +59,17 @@ public class ChatService : IChatService
 
     public async Task<ResponseModel<ChatResponse?>> UpdateChatNameAsync(UpdateChatNameRequest request)
     {
-        Chat? findChat = await _Repository.GetByIdAsync(request.Id);
-        if(findChat is null)
-            return ResponseModel.NOTFOUND(["Chat not found."]);
+        using(var validator = new UpdateChatNameRequestValidation())
+        {
+            var validationResult = validator.Validate(request);
+            if (!validationResult.IsValid)
+                return ResponseModel.BADREQUEST(validationResult.Errors.Select(e => e.ErrorMessage));
+            Chat? findChat = await _Repository.GetByIdAsync(request.Id);
+            if(findChat is null)
+                return ResponseModel.NOTFOUND(["Chat not found."]);
 
-        findChat.UpdateChatName(request.Name);
-        return ResponseModel.OK(_Mapper.Map<ChatResponse>(findChat));
+            findChat.UpdateChatName(request.Name);
+            return ResponseModel.OK(_Mapper.Map<ChatResponse>(findChat));
+        }
     }
 }
