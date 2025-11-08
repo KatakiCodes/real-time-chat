@@ -1,5 +1,6 @@
 using System;
 using AutoMapper;
+using FluentValidation.Results;
 using realtime_chat_api.DTOs.Requests;
 using realtime_chat_api.DTOs.Responses;
 using realtime_chat_api.DTOs.Validations;
@@ -21,13 +22,14 @@ public class UserService : IUserService
         ResponseModel = new();
     }
 
-    public async Task<ResponseModel<UserResponse>> CreateAsync(CreateUserRequest request)
+    public async Task<ResponseModel<UserResponse?>> CreateAsync(CreateUserRequest request)
     {
         using(CreateUserRequestValidation validator = new ())
         {
             var validatioResult = validator.Validate(request);
-            if(!validatioResult.IsValid)
-                return new ResponseModel<IEnumerable<string>>().BADREQUEST([.. validatioResult.Errors.Select(e=>e.ErrorMessage)])
+            if (!validatioResult.IsValid)
+                return ResponseModel.BADREQUEST(validatioResult.Errors.Select(x => x.ErrorMessage));
+
             User user = _Mapper.Map<User>(request);
             user = await _Repository.CreateAsync(user);
             UserResponse response = _Mapper.Map<UserResponse>(user);
@@ -49,10 +51,16 @@ public class UserService : IUserService
         if (findUser is null)
             return ResponseModel.NOTFOUND(["User not found."]);
             
-        findUser.UpdateUserName(request.Username);
-        await _Repository.UpdateAsync(findUser);
-        UserResponse response = _Mapper.Map<UserResponse>(findUser);
+        using(var validator = new UpdateUsernameRequestValidation())
+        {
+            var validatioResult = validator.Validate(request);
+            if (!validatioResult.IsValid)
+                return ResponseModel.BADREQUEST(validatioResult.Errors.Select(x => x.ErrorMessage));
+            findUser.UpdateUserName(request.Username);
+            await _Repository.UpdateAsync(findUser);
+            UserResponse response = _Mapper.Map<UserResponse>(findUser);
 
-        return ResponseModel.OK(response);
+            return ResponseModel.OK(response);
+        }
     }
 }
