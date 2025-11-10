@@ -24,15 +24,16 @@ public class UserService : IUserService
 
     public async Task<ResponseModel<UserResponse?>> CreateAsync(CreateUserRequest request)
     {
-        using(CreateUserRequestValidation validator = new ())
+        using (CreateUserRequestValidation validator = new())
         {
             var validationResult = validator.Validate(request);
             if (!validationResult.IsValid)
                 return ResponseModel.BADREQUEST(validationResult.Errors.Select(x => x.ErrorMessage));
 
-            User user = _Mapper.Map<User>(request);
+            var withPasswordHash = request with { Password = BCrypt.Net.BCrypt.HashPassword(request.Password) };
+            User user = _Mapper.Map<User>(withPasswordHash);
             user = await _Repository.CreateAsync(user);
-            UserResponse response = _Mapper.Map<UserResponse>(user);
+            UserResponse response = _Mapper.Map<UserResponse>(withPasswordHash);
             return ResponseModel.CREATED(response)!;
         }
     }
