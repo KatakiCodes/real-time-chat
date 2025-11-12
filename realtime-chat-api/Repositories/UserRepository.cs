@@ -27,6 +27,8 @@ public class UserRepository : IUserRepository
         return findUser;
     }
 
+    public async Task<User?> GetUserByEmailAsync(string email)=> await _context.Users.AsNoTracking().Where(x => x.Email == email).FirstOrDefaultAsync();
+
     public async Task<User> UpdateAsync(User entity)
     {
         _context.Users.Update(entity);

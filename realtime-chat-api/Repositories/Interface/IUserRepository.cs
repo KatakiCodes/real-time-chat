@@ -5,4 +5,6 @@ using realtime_chat_api.Repositories.Interface;
 namespace realtime_chat_api.Repositories;
 
 public interface IUserRepository : IBaseRepository<User>
-{}
+{
+    public Task<User?> GetUserByEmailAsync(string email);
+}
