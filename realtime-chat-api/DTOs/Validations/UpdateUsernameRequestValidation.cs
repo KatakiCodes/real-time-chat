@@ -8,7 +8,7 @@ public class UpdateUsernameRequestValidation : AbstractValidator<UpdateUsernameR
 {
     public UpdateUsernameRequestValidation()
     {
-        RuleFor(p => p.Username).EmailAddress().NotNull().NotEmpty();
+        RuleFor(p => p.Username).NotNull().NotEmpty();
     }
 
     public void Dispose()

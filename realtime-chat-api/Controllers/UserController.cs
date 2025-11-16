@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using realtime_chat_api.DomainExceptions;
 using realtime_chat_api.DTOs.Requests;
@@ -16,22 +18,42 @@ namespace realtime_chat_api.Controllers
         {
             _UserService = userService;
         }
+        [AllowAnonymous]
+        [HttpPost("Login")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel<UserResponse>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<ResponseModel<UserResponse>>> Auth([FromBody]LoginRequest request)
+        {
+            try
+            {
+                var response = await _UserService.Login(request);
+                return StatusCode((int)response.Status, response.Data);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
+            }
+        }
+        [Authorize]
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel<UserResponse>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ResponseModel<UserResponse>>> GetById([FromRoute]int id)
+        public async Task<ActionResult<ResponseModel<UserResponse>>> GetById([FromRoute] int id)
         {
             try
             {
                 var response = await _UserService.GetByIdAsync(id);
                 return StatusCode((int)response.Status, response.Data);
             }
-            catch(Exception){
+            catch (Exception)
+            {
                 return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
             }
         }
 
+
         [HttpPost]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResponseModel<UserResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ResponseModel<UserResponse>>> CreateUser([FromBody] CreateUserRequest request)
@@ -50,8 +72,9 @@ namespace realtime_chat_api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<UserResponse>().INTERNALSERVERERROR(["An unexpected error occurred."]));
             }
         }
-        
+
         [HttpPut]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel<UserResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -59,21 +82,22 @@ namespace realtime_chat_api.Controllers
         {
             try
             {
-                int tryGetUserId = int.Parse(User.FindFirst("sub")?.Value ?? "0");
-                if (tryGetUserId == 0)
+                string? tryGetUserId = User.Claims.FirstOrDefault(c=>c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (tryGetUserId is null)
                     return Unauthorized(new ResponseModel<UserResponse>().UNAUTHORIZED(["Invalid token."]));
-                    
-                request.SetUserId(tryGetUserId);
+
+                request.SetUserId(int.Parse(tryGetUserId));
 
                 var operationResult = await _UserService.UpdateUserNameAsync(request);
 
                 return StatusCode((int)operationResult.Status, operationResult.Data);
             }
-            catch(DomainException ex)
+            catch (DomainException ex)
             {
                 return BadRequest(new ResponseModel<UserResponse>().BADREQUEST([ex.Message]));
             }
-            catch(Exception){
+            catch (Exception)
+            {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<UserResponse>().INTERNALSERVERERROR(["An unexpected error occurred."]));
             }
         }

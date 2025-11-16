@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace realtime_chat_api.DTOs.Requests;
 
-public record class UpdateUsernameRequest
+public record UpdateUsernameRequest
 {
     [MinLength(3)]
     [MaxLength(30)]

@@ -2,7 +2,7 @@ using realtime_chat_api.Enums;
 
 namespace realtime_chat_api.DTOs.Responses;
 
-public record class ResponseModel<T> where T : class
+public record ResponseModel<T> where T : class
 {
     public bool Success { get { return !Errors.Any(); } }
     public T? Data { get; init; }

@@ -5,27 +5,27 @@ namespace realtime_chat_api.Entities;
 
 public class Chat : Entity
 {
-    public int AdminId { get; private set; }
-    public User Admin { get; private set; }
+    public int UserId { get; private set; }
+    public User User { get; private set; }
     public string Name { get; private set; }
     public string Code { get; private set; }
     private List<Message> Messages { get; set; }
     public Chat()
     { }
-    public Chat(User admin, string name, string code)
+    public Chat(User user, string name, string code)
     {
-        DomainException.When(admin is null, "Admin cannot be empty");
+        DomainException.When(user is null, "Admin cannot be empty");
         Name = name;
-        Admin = admin!;
-        AdminId = admin!.Id;
+        User = user!;
+        UserId = user!.Id;
         Code = code;
     }
-    public Chat(int id, User admin, string name, string code) : base(id)
+    public Chat(int id, User user, string name, string code) : base(id)
     {
-        DomainException.When(admin is null, "Admin cannot be empty");
+        DomainException.When(user is null, "Admin cannot be empty");
         Name = name;
-        Admin = admin!;
-        AdminId = admin!.Id;
+        User = user!;
+        UserId = user!.Id;
         Code = code;
     }
     public void UpdateChatName(string name)

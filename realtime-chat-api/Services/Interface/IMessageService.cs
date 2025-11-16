@@ -9,4 +9,5 @@ public interface IMessageService
     public Task<ResponseModel<IEnumerable<MessageResponse>>> GetByChatIdAsync(int chatId);
     public Task<ResponseModel<MessageResponse>> CreateAsync(CreateMessageRequest request);
     public Task<ResponseModel<MessageResponse>> EditMessageContentAsync(UpdateMessageRequest request);
+    public Task<ResponseModel<MessageResponse?>> DeleteMessageAsync(int id);
 }

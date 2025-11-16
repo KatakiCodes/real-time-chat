@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using realtime_chat_api.DomainExceptions;
@@ -9,6 +11,7 @@ namespace realtime_chat_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class ChatController : ControllerBase
     {
@@ -25,7 +28,7 @@ namespace realtime_chat_api.Controllers
         {
             try
             {
-                var logedUser = User.FindFirst(c => c.Type == "sub")?.Value;
+                var logedUser = User.Claims.FirstOrDefault(c=>c.Type == ClaimTypes.NameIdentifier)?.Value;
 
                 if (logedUser is null)
                     return Unauthorized(new ResponseModel<ChatResponse>().UNAUTHORIZED(["Invalid user."]));
@@ -63,7 +66,7 @@ namespace realtime_chat_api.Controllers
             }
         }
 
-        // GET api/chat/admin/{adminId}
+        // GET api/chat/admin/
         [HttpGet("admin")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel<IEnumerable<ChatResponse>>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -71,7 +74,7 @@ namespace realtime_chat_api.Controllers
         {
             try
             {
-                var logedUser = User.FindFirst(c => c.Type == "sub")?.Value;
+                var logedUser = User.Claims.FirstOrDefault(c=>c.Type == ClaimTypes.NameIdentifier)?.Value;
                 if (logedUser is null)
                     return Unauthorized(new ResponseModel<ChatResponse>().UNAUTHORIZED(["Invalid user."]));
                 int logedUserId = int.Parse(logedUser);
@@ -79,9 +82,9 @@ namespace realtime_chat_api.Controllers
                 var operatioResult = await _ChatService.GetByUserIdAsync(logedUserId);
                 return StatusCode((int)operatioResult.Status, operatioResult.Data);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<ChatResponse>().INTERNALSERVERERROR(["An unexpected error occured."]));
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<ChatResponse>().INTERNALSERVERERROR([$"An unexpected error occured. {ex.Message}"]));
             }
         }
 
@@ -95,7 +98,7 @@ namespace realtime_chat_api.Controllers
         {
             try
             {
-                var logedUser = User.FindFirst(c => c.Type == "sub")?.Value;
+                var logedUser = User.Claims.FirstOrDefault(c=>c.Type == ClaimTypes.NameIdentifier)?.Value;
 
                 if (logedUser is null)
                     return Unauthorized(new ResponseModel<ChatResponse>().UNAUTHORIZED(["Invalid user."]));
@@ -103,7 +106,7 @@ namespace realtime_chat_api.Controllers
 
                 var findChat = await _ChatService.GetByIdAsync(request.Id);
 
-                if ((findChat.Data is not null) && (findChat.Data.AdminId != logedUserId))
+                if ((findChat.Data is not null) && (findChat.Data.UserId != logedUserId))
                     return Unauthorized(new ResponseModel<ChatResponse>().UNAUTHORIZED(["Only admin can update chat name."]));
 
                 var operationResult = await _ChatService.UpdateChatNameAsync(request);

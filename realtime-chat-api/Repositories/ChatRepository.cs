@@ -23,7 +23,7 @@ public class ChatRepository : IChatRepository
     public async Task<Chat?> GetByIdAsync(int id)=> await _Context.Chats.FindAsync(id);
 
     public async Task<IEnumerable<Chat>> GetChatsByUserIdAsync(int userId)=> await _Context.Chats.AsNoTracking()
-            .Where(c => c.AdminId == userId).ToListAsync();
+            .Where(c => c.UserId == userId).ToListAsync();
 
     public async Task<Chat> UpdateAsync(Chat entity)
     {

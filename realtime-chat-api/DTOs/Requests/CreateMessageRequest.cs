@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace realtime_chat_api.DTOs.Requests;
 
-public record class CreateMessageRequest
+public record CreateMessageRequest
 {
     private int UserId { get; set; }
     [Required]

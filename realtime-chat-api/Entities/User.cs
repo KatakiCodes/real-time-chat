@@ -7,7 +7,7 @@ public class User : Entity
     public string Email { get; private set; }
     public string Username { get; private set; }
     public string Password { get; private set; }
-    public List<Chat> AdministeredChats { get; private set; }
+    public List<Chat> Chats { get; private set; }
 
     public User()
     { }

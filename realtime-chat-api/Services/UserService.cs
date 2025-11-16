@@ -35,7 +35,7 @@ public class UserService : IUserService
             var withPasswordHash = request with { Password = BCrypt.Net.BCrypt.HashPassword(request.Password) };
             User user = _Mapper.Map<User>(withPasswordHash);
             user = await _Repository.CreateAsync(user);
-            UserResponse response = _Mapper.Map<UserResponse>(withPasswordHash);
+            UserResponse response = _Mapper.Map<UserResponse>(user);
             return ResponseModel.CREATED(response)!;
         }
     }
@@ -57,7 +57,7 @@ public class UserService : IUserService
             if (!validationResult.IsValid)
                 return response.BADREQUEST(validationResult.Errors.Select(x => x.ErrorMessage))!;
             var findUser = await _Repository.GetUserByEmailAsync(request.Email);
-            if ((findUser is null) || (BCrypt.Net.BCrypt.Verify(request.Email, findUser.Password) == false))
+            if ((findUser is null) || (BCrypt.Net.BCrypt.Verify(request.Password, findUser.Password) == false))
                 return response.UNAUTHORIZED(["Email or Password invalid."]);
             var loginResponse = new LoginResponse(new TokenService(this._Configuration).Generate(findUser));
             return response.OK(loginResponse);

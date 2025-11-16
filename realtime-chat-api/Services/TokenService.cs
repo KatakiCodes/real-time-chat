@@ -20,9 +20,11 @@ namespace realtime_chat_api.Services
 
         public string Generate(User user)
         {
-            var secretKey = Encoding.UTF8.GetBytes(this._Configuration["Jwt:Key"]);
+            var secretKey = Encoding.UTF8.GetBytes(_Configuration["Jwt:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                Issuer = _Configuration["Jwt:Issuer"],
+                Audience = _Configuration["Jwt:Audience"],
                 Subject = new ClaimsIdentity(GetClaimsFromUser(user)),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256Signature),
                 Expires = DateTime.UtcNow.AddHours(1)
@@ -33,7 +35,7 @@ namespace realtime_chat_api.Services
         private List<Claim> GetClaimsFromUser(User user)
         {
             List<Claim> claims = [
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Name, user.Username)
                 ];
             return claims;

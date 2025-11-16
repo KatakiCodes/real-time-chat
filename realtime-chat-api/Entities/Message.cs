@@ -26,7 +26,7 @@ public class Message : Entity
         UserId = user!.Id;
         ChatId = chat!.Id;
         Content = content;
-        Date = DateTime.UtcNow;
+        Date = DateTime.Now;
         State = EMessageState.Sent;
     }
     public Message(int id, User user, Chat chat, string content) : base(id)
@@ -37,7 +37,7 @@ public class Message : Entity
         User = user!;
         Chat = chat!;
         Content = content;
-        Date = DateTime.UtcNow;
+        Date = DateTime.Now;
         State = EMessageState.Sent;
     }
     public void UpdateContent(string content)
@@ -46,4 +46,5 @@ public class Message : Entity
         this.Content = content;
         this.State = EMessageState.Edited;
     }
+    public void DeleteMessage() => this.State = EMessageState.Deleted;
 }

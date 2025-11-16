@@ -69,6 +69,7 @@ public class ChatService : IChatService
                 return ResponseModel.NOTFOUND(["Chat not found."]);
 
             findChat.UpdateChatName(request.Name);
+            await _Repository.UpdateAsync(findChat);
             return ResponseModel.OK(_Mapper.Map<ChatResponse>(findChat));
         }
     }

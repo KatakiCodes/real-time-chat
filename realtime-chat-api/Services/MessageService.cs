@@ -1,6 +1,4 @@
-using System;
 using AutoMapper;
-using realtime_chat_api.DomainExceptions;
 using realtime_chat_api.DTOs.Requests;
 using realtime_chat_api.DTOs.Responses;
 using realtime_chat_api.DTOs.Validations;
@@ -75,5 +73,15 @@ public class MessageService : IMessageService
         foreach (Message message in messages)
             response.Add(_Mapper.Map<MessageResponse>(message));
         return new ResponseModel<IEnumerable<MessageResponse>>().OK(response);
+    }
+
+    public async Task<ResponseModel<MessageResponse?>> DeleteMessageAsync(int id)
+    {
+        var findMessage = await _Repository.GetByIdAsync(id);
+        if (findMessage is null)
+            return ResponseModel.NOTFOUND(["Message not found"]);
+        findMessage.DeleteMessage();
+        findMessage = await _Repository.UpdateAsync(findMessage);
+        return ResponseModel.OK(_Mapper.Map<MessageResponse>(findMessage))!;
     }
 }

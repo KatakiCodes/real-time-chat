@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using realtime_chat_api.DomainExceptions;
 using realtime_chat_api.DTOs.Requests;
@@ -9,6 +10,7 @@ namespace realtime_chat_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class MessageController : ControllerBase
     {
@@ -44,7 +46,7 @@ namespace realtime_chat_api.Controllers
         {
             try
             {
-                var logedUser = User.FindFirst(c => c.Type == "sub")?.Value;
+                var logedUser = User.Claims.FirstOrDefault(c=>c.Type == ClaimTypes.NameIdentifier)?.Value;
                 if (logedUser is null)
                     return Unauthorized(new ResponseModel<MessageResponse>().UNAUTHORIZED(["Invalid user."]));
                 int logedUserId = int.Parse(logedUser);
@@ -73,7 +75,7 @@ namespace realtime_chat_api.Controllers
         {
             try
             {
-                var logedUserId = User.FindFirst(c => c.Type == "sub")?.Value;
+                var logedUserId = User.Claims.FirstOrDefault(c=>c.Type == ClaimTypes.NameIdentifier)?.Value;
                 if (logedUserId is null)
                     return Unauthorized(new ResponseModel<MessageResponse>().UNAUTHORIZED(["Invalid user."]));
 
@@ -83,6 +85,21 @@ namespace realtime_chat_api.Controllers
             catch (DomainException ex)
             {
                 return BadRequest(new ResponseModel<MessageResponse>().BADREQUEST([ex.Message]));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<MessageResponse>().INTERNALSERVERERROR(["An unexpected error occurred."]));
+            }
+        }
+        [HttpDelete("{Id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel<IEnumerable<MessageResponse>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseModel<IEnumerable<MessageResponse>>))]
+        public async Task<ActionResult<ResponseModel<IEnumerable<MessageResponse>>>> Delete([FromRoute] int Id)
+        {
+            try
+            {
+                var operationResult = await _MessageService.DeleteMessageAsync(Id);
+                return StatusCode((int)operationResult.Status, operationResult.Data);
             }
             catch (Exception)
             {
