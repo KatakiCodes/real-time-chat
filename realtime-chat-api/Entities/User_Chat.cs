@@ -5,23 +5,25 @@ namespace realtime_chat_api.Entities
 {
     public class User_Chat : Entity
     {
-        public User_Chat(User user, Chat chat, EUserChatActivityState activityState, bool isAdmin)
+        public User_Chat()
         {
-            DomainException.When(user is null, "Invalid user");
-            DomainException.When(chat is null, "Invalid chat");
-            User = user;
-            Chat = chat;
-            UserId = user.Id;
-            ChatId = chat.Id;
+            DateCreate = DateTime.UtcNow;
+        }
+        public User_Chat(int userId, int chatId, EUserChatActivityState activityState, bool isAdmin)
+        {
+            UserId = userId;
+            ChatId = chatId;
             ActivityState = activityState;
             IsAdmin = isAdmin;
+            DateCreate = DateTime.UtcNow;
         }
 
-        public User User { get; private set; }
-        public Chat Chat { get; private set; }
+        public User? User { get; private set; }
+        public Chat? Chat { get; private set; }
         public int UserId { get; private set; }
         public int ChatId { get; private set; }
         public EUserChatActivityState ActivityState { get; private set; }
         public bool IsAdmin { get; private set; }
+        public DateTime DateCreate { get; private set; }
     }
 }
