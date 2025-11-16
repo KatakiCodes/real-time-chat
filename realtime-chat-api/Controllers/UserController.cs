@@ -27,6 +27,8 @@ namespace realtime_chat_api.Controllers
             try
             {
                 var response = await _UserService.Login(request);
+                if(response.Status != Enums.EResultStatus.OK)
+                    return StatusCode((int)response.Status, response.Errors);
                 return StatusCode((int)response.Status, response.Data);
             }
             catch (Exception)
@@ -43,6 +45,8 @@ namespace realtime_chat_api.Controllers
             try
             {
                 var response = await _UserService.GetByIdAsync(id);
+                if(response.Status != Enums.EResultStatus.OK)
+                    return StatusCode((int)response.Status, response.Errors);
                 return StatusCode((int)response.Status, response.Data);
             }
             catch (Exception)
@@ -60,8 +64,10 @@ namespace realtime_chat_api.Controllers
         {
             try
             {
-                var operationResult = await _UserService.CreateAsync(request);
-                return StatusCode((int)operationResult.Status, operationResult.Data);
+                var response = await _UserService.CreateAsync(request);
+                if(response.Status != Enums.EResultStatus.CREATED)
+                    return StatusCode((int)response.Status, response.Errors);
+                return Created("User",response.Data);
             }
             catch (DomainException ex)
             {
@@ -88,9 +94,11 @@ namespace realtime_chat_api.Controllers
 
                 request.SetUserId(int.Parse(tryGetUserId));
 
-                var operationResult = await _UserService.UpdateUserNameAsync(request);
+                var response = await _UserService.UpdateUserNameAsync(request);
 
-                return StatusCode((int)operationResult.Status, operationResult.Data);
+                if(response.Status != Enums.EResultStatus.OK)
+                    return StatusCode((int)response.Status, response.Errors);
+                return StatusCode((int)response.Status, response.Data);
             }
             catch (DomainException ex)
             {

@@ -36,8 +36,10 @@ namespace realtime_chat_api.Controllers
 
                 request.SetUserId(logedUserId);
 
-                var operationResult = await _ChatService.CreateAsync(request);
-                return StatusCode((int)operationResult.Status, operationResult.Data);
+                var response = await _ChatService.CreateAsync(request);
+                if(response.Status != Enums.EResultStatus.CREATED)
+                    return StatusCode((int)response.Status, response.Errors);
+                return Created("Chat", response.Data);
             }
             catch (DomainException ex)
             {
@@ -57,8 +59,10 @@ namespace realtime_chat_api.Controllers
         {
             try
             {
-                var operatioResult = await _ChatService.GetByIdAsync(id);
-                return StatusCode((int)operatioResult.Status, operatioResult.Data);
+                var response = await _ChatService.GetByIdAsync(id);
+                if(response.Status != Enums.EResultStatus.OK)
+                    return StatusCode((int)response.Status, response.Errors);
+                return StatusCode((int)response.Status, response.Data);
             }
             catch (Exception)
             {
@@ -79,8 +83,10 @@ namespace realtime_chat_api.Controllers
                     return Unauthorized(new ResponseModel<ChatResponse>().UNAUTHORIZED(["Invalid user."]));
                 int logedUserId = int.Parse(logedUser);
 
-                var operatioResult = await _ChatService.GetByUserIdAsync(logedUserId);
-                return StatusCode((int)operatioResult.Status, operatioResult.Data);
+                var response = await _ChatService.GetByUserIdAsync(logedUserId);
+                if(response.Status != Enums.EResultStatus.OK)
+                    return StatusCode((int)response.Status, response.Errors);
+                return StatusCode((int)response.Status, response.Data);
             }
             catch (Exception ex)
             {
@@ -109,8 +115,10 @@ namespace realtime_chat_api.Controllers
                 if ((findChat.Data is not null) && (findChat.Data.UserId != logedUserId))
                     return Unauthorized(new ResponseModel<ChatResponse>().UNAUTHORIZED(["Only admin can update chat name."]));
 
-                var operationResult = await _ChatService.UpdateChatNameAsync(request);
-                return StatusCode((int)operationResult.Status, operationResult.Data);
+                var response = await _ChatService.UpdateChatNameAsync(request);
+                if(response.Status != Enums.EResultStatus.OK)
+                    return StatusCode((int)response.Status, response.Errors);
+                return StatusCode((int)response.Status, response.Data);
             }
             catch (DomainException ex)
             {

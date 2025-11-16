@@ -28,8 +28,10 @@ namespace realtime_chat_api.Controllers
         {
             try
             {
-                var operationResult = await _MessageService.GetByChatIdAsync(chatId);
-                return StatusCode((int)operationResult.Status, operationResult.Data);
+                var response = await _MessageService.GetByChatIdAsync(chatId);
+                if(response.Status != Enums.EResultStatus.OK)
+                    return StatusCode((int)response.Status, response.Errors);
+                return StatusCode((int)response.Status, response.Data);
             }
             catch (Exception)
             {
@@ -52,9 +54,11 @@ namespace realtime_chat_api.Controllers
                 int logedUserId = int.Parse(logedUser);
                 request.SetUserId(logedUserId);
 
-                var operationResult = await _MessageService.CreateAsync(request);
+                var response = await _MessageService.CreateAsync(request);
 
-                return StatusCode((int)operationResult.Status,operationResult.Data);
+                if(response.Status != Enums.EResultStatus.CREATED)
+                    return StatusCode((int)response.Status, response.Errors);
+                return Created("Message", response.Data);
             }
             catch (DomainException ex)
             {
@@ -79,8 +83,10 @@ namespace realtime_chat_api.Controllers
                 if (logedUserId is null)
                     return Unauthorized(new ResponseModel<MessageResponse>().UNAUTHORIZED(["Invalid user."]));
 
-                var operationResult = await _MessageService.EditMessageContentAsync(request);
-                return StatusCode((int)operationResult.Status, operationResult.Data);
+                var response = await _MessageService.EditMessageContentAsync(request);
+                if(response.Status != Enums.EResultStatus.OK)
+                    return StatusCode((int)response.Status, response.Errors);
+                return StatusCode((int)response.Status, response.Data);
             }
             catch (DomainException ex)
             {
@@ -98,8 +104,10 @@ namespace realtime_chat_api.Controllers
         {
             try
             {
-                var operationResult = await _MessageService.DeleteMessageAsync(Id);
-                return StatusCode((int)operationResult.Status, operationResult.Data);
+                var response = await _MessageService.DeleteMessageAsync(Id);
+                if(response.Status != Enums.EResultStatus.OK)
+                    return StatusCode((int)response.Status, response.Errors);
+                return StatusCode((int)response.Status, response.Data);
             }
             catch (Exception)
             {
