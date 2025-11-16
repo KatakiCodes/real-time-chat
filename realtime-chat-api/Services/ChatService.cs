@@ -35,7 +35,8 @@ public class ChatService : IChatService
             if (findUser.Data is null)
                 return ResponseModel.UNAUTHORIZED(["Invalid user"]);
 
-            Chat chat = _Mapper.Map<Chat>(request);
+            var requestEncrypted = request with {Code = BCrypt.Net.BCrypt.HashPassword(request.Code)};
+            Chat chat = _Mapper.Map<Chat>(requestEncrypted);
             chat = await _Repository.CreateAsync(chat);
             return ResponseModel.CREATED(_Mapper.Map<ChatResponse>(chat));
         }
