@@ -22,12 +22,23 @@ namespace realtime_chat_api.Repositories
             return user_Chat;
         }
 
-        public async Task Delete(User_Chat user_chat) => _Context.User_Chats.Remove(user_chat);
+        public async Task Delete(User_Chat user_chat)
+        {
+            _Context.User_Chats.Remove(user_chat);
+            await _Context.SaveChangesAsync();
+        }
 
-        public async Task<IEnumerable<User_Chat>> GetByChatIdAsync(int chatId) => await _Context.User_Chats.AsNoTracking().Where(c=>c.ChatId == chatId).ToListAsync();
+        public async Task<IEnumerable<User_Chat>> GetByChatIdAsync(int chatId) => await _Context.User_Chats.AsNoTracking().Where(c => c.ChatId == chatId).ToListAsync();
 
-        public async Task<User_Chat?> GetByIdAsync(int user_ChatId)=> await _Context.User_Chats.FindAsync(user_ChatId);
+        public async Task<User_Chat?> GetByIdAsync(int user_ChatId) => await _Context.User_Chats.FindAsync(user_ChatId);
 
-        public async Task<IEnumerable<User_Chat>> GetByUserIdAsync(int userId)=> await _Context.User_Chats.AsNoTracking().Where(c=>c.UserId == userId).ToListAsync();
+        public async Task<IEnumerable<User_Chat>> GetByUserIdAsync(int userId) => await _Context.User_Chats.AsNoTracking().Where(c => c.UserId == userId).ToListAsync();
+
+        public async Task<User_Chat> UpdateAsync(User_Chat user_chat)
+        {
+            _Context.User_Chats.Update(user_chat);
+            await _Context.SaveChangesAsync();
+            return user_chat;
+        }
     }
 }
