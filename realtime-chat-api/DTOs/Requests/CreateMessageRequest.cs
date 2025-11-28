@@ -4,12 +4,8 @@ namespace realtime_chat_api.DTOs.Requests;
 
 public record CreateMessageRequest
 {
-    private int UserId { get; set; }
     [Required]
-    public int ChatId { get; init; }
+    public int User_ChatId { get; init; }
     [Required]
     public string Content { get; init; } = string.Empty;
-
-    public void SetUserId(int id) => UserId = id;
-    public int GetUserId() => UserId;
 }

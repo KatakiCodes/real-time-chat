@@ -11,7 +11,7 @@ namespace realtime_chat_api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string[]))]
     public class MessageController : ControllerBase
     {
         private readonly IMessageService _MessageService;
@@ -22,9 +22,9 @@ namespace realtime_chat_api.Controllers
         }
 
         [HttpGet("chat/{chatId:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel<IEnumerable<MessageResponse>>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseModel<IEnumerable<MessageResponse>>))]
-        public async Task<ActionResult<ResponseModel<IEnumerable<MessageResponse>>>> GetByChatId([FromRoute] int chatId)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MessageResponse>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string[]))]
+        public async Task<ActionResult<IEnumerable<MessageResponse>>> GetByChatId([FromRoute] int chatId)
         {
             try
             {
@@ -33,27 +33,21 @@ namespace realtime_chat_api.Controllers
                     return StatusCode((int)response.Status, response.Errors);
                 return StatusCode((int)response.Status, response.Data);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<MessageResponse>().INTERNALSERVERERROR(["An unexpected error occurred."]));
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<MessageResponse>().INTERNALSERVERERROR([$"An unexpected error occurred. {ex.Message}"]));
             }
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResponseModel<MessageResponse>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ResponseModel<MessageResponse>>> Create([FromBody] CreateMessageRequest request)
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string[]))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string[]))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string[]))]
+        public async Task<ActionResult<MessageResponse>> Create([FromBody] CreateMessageRequest request)
         {
             try
             {
-                var logedUser = User.Claims.FirstOrDefault(c=>c.Type == ClaimTypes.NameIdentifier)?.Value;
-                if (logedUser is null)
-                    return Unauthorized(new ResponseModel<MessageResponse>().UNAUTHORIZED(["Invalid user."]));
-                int logedUserId = int.Parse(logedUser);
-                request.SetUserId(logedUserId);
-
                 var response = await _MessageService.CreateAsync(request);
 
                 if(response.Status != Enums.EResultStatus.CREATED)
@@ -72,10 +66,10 @@ namespace realtime_chat_api.Controllers
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel<MessageResponse>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ResponseModel<MessageResponse>>> EditContent([FromBody] UpdateMessageRequest request)
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string[]))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string[]))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string[]))]
+        public async Task<ActionResult<MessageResponse>> Update([FromBody] UpdateMessageRequest request)
         {
             try
             {
@@ -97,15 +91,15 @@ namespace realtime_chat_api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<MessageResponse>().INTERNALSERVERERROR(["An unexpected error occurred."]));
             }
         }
-        [HttpDelete("{Id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel<IEnumerable<MessageResponse>>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseModel<IEnumerable<MessageResponse>>))]
-        public async Task<ActionResult<ResponseModel<IEnumerable<MessageResponse>>>> Delete([FromRoute] int Id)
+        [HttpDelete("{messageId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string[]))]
+        public async Task<ActionResult<IEnumerable<MessageResponse>>> Delete([FromRoute] int messageId)
         {
             try
             {
-                var response = await _MessageService.DeleteMessageAsync(Id);
-                if(response.Status != Enums.EResultStatus.OK)
+                var response = await _MessageService.DeleteMessageAsync(messageId);
+                if(response.Success == false)
                     return StatusCode((int)response.Status, response.Errors);
                 return StatusCode((int)response.Status, response.Data);
             }

@@ -9,7 +9,7 @@ public class CreateMessageRequestValidation : AbstractValidator<CreateMessageReq
     public CreateMessageRequestValidation()
     {
         RuleFor(p => p.Content).NotNull().NotEmpty();
-        RuleFor(p => p.ChatId).NotNull();
+        RuleFor(p => p.User_ChatId).NotNull();
     }
 
     public void Dispose()

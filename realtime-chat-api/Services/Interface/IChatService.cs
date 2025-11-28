@@ -8,6 +8,7 @@ public interface IChatService
 {
     public Task<ResponseModel<ChatResponse?>> GetByIdAsync(int chatId);
     public Task<ResponseModel<IEnumerable<ChatResponse>>> GetByUserIdAsync(int userId);
+    public Task<ResponseModel<IEnumerable<UserResponse>>> GetUsersAsync(int chatId);
     public Task<ResponseModel<ChatResponse>> CreateAsync(CreateChatRequest request);
     public Task<ResponseModel<ChatResponse>> UpdateChatNameAsync(UpdateChatNameRequest request);
 }

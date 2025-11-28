@@ -10,14 +10,18 @@ namespace realtime_chat_api.Entities
             DateCreate = DateTime.UtcNow;
             DefineInitialActivityState(isAdmin:false);
         }
-        public User_Chat(int userId, int chatId, EUserChatActivityState activityState, bool isAdmin)
+        public User_Chat(User user, Chat chat)
+        {
+            User = user;
+            Chat = chat;
+        }
+        public User_Chat(int userId, int chatId, bool isAdmin)
         {
             UserId = userId;
             ChatId = chatId;
-            ActivityState = activityState;
+            ActivityState = DefineInitialActivityState(isAdmin);
             IsAdmin = isAdmin;
             DateCreate = DateTime.UtcNow;
-            DefineInitialActivityState(isAdmin);
         }
         private EUserChatActivityState DefineInitialActivityState(bool isAdmin) => isAdmin ? EUserChatActivityState.CAN_INTERACT : EUserChatActivityState.WAIT_ACCESS;
 

@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using realtime_chat_api.DomainExceptions;
 using realtime_chat_api.DTOs.Requests;
@@ -12,19 +11,72 @@ namespace realtime_chat_api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError,Type = typeof(string[]))]
     public class ChatController : ControllerBase
     {
         private readonly IChatService _ChatService;
-        public ChatController([FromServices] IChatService chatService)
+        private readonly IUserService _UserService;
+
+        public ChatController([FromServices] IChatService chatService, IUserService userService)
         {
             _ChatService = chatService;
+            _UserService = userService;
         }
+
+        [Authorize]
+        [HttpGet("chats")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ChatResponse>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string[]))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string[]))]
+        public async Task<ActionResult<IEnumerable<ChatResponse>>> GetByUserId()
+        {
+            try
+            {
+                var logedUser = User.Claims.FirstOrDefault(c=>c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                if (logedUser is null)
+                    return Unauthorized(new ResponseModel<ChatResponse>().UNAUTHORIZED(["Invalid user."]));
+                    
+                int logedUserId = int.Parse(logedUser);
+
+                var response = await _ChatService.GetByUserIdAsync(logedUserId);
+                
+                if(response.Success == false)
+                    return StatusCode((int)response.Status, response.Errors);
+                return Ok(response.Data);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,new ResponseModel<ChatResponse>().INTERNALSERVERERROR(["An unexpected error occurred."]));
+            }
+        }
+
+       [Authorize]
+        [HttpGet("users/{chatId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<UserResponse>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string[]))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string[]))]
+        public async Task<ActionResult<IEnumerable<UserResponse>>> GetUsers(int chatId)
+        {
+            try
+            {
+                var response = await _ChatService.GetUsersAsync(chatId);
+                
+                if(response.Success == false)
+                    return StatusCode((int)response.Status, response.Errors);
+                return Ok(response.Data);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,new ResponseModel<ChatResponse>().INTERNALSERVERERROR(["An unexpected error occurred."]));
+            }
+        }
+
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResponseModel<ChatResponse>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<ResponseModel<IEnumerable<ChatResponse>>>> CreateChat([FromBody] CreateChatRequest request)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ChatResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string[]))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string[]))]
+        public async Task<ActionResult<IEnumerable<ChatResponse>>> Create([FromBody] CreateChatRequest request)
         {
             try
             {
@@ -51,55 +103,13 @@ namespace realtime_chat_api.Controllers
             }
         }
 
-        // GET api/chat/{id}
-        [HttpGet("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel<ChatResponse>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ResponseModel<ChatResponse>>> GetById([FromRoute] int id)
-        {
-            try
-            {
-                var response = await _ChatService.GetByIdAsync(id);
-                if(response.Status != Enums.EResultStatus.OK)
-                    return StatusCode((int)response.Status, response.Errors);
-                return StatusCode((int)response.Status, response.Data);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<ChatResponse>().INTERNALSERVERERROR(["An unexpected error occured."]));
-            }
-        }
-
-        // GET api/chat/admin/
-        [HttpGet("admin")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel<IEnumerable<ChatResponse>>))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<ResponseModel<IEnumerable<ChatResponse>>>> GetByAdminId()
-        {
-            try
-            {
-                var logedUser = User.Claims.FirstOrDefault(c=>c.Type == ClaimTypes.NameIdentifier)?.Value;
-                if (logedUser is null)
-                    return Unauthorized(new ResponseModel<ChatResponse>().UNAUTHORIZED(["Invalid user."]));
-                int logedUserId = int.Parse(logedUser);
-
-                var response = await _ChatService.GetByUserIdAsync(logedUserId);
-                if(response.Status != Enums.EResultStatus.OK)
-                    return StatusCode((int)response.Status, response.Errors);
-                return StatusCode((int)response.Status, response.Data);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseModel<ChatResponse>().INTERNALSERVERERROR([$"An unexpected error occured. {ex.Message}"]));
-            }
-        }
-
+ 
         [HttpPut()]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel<ChatResponse>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<ResponseModel<ChatResponse>>> UpdateChatName(
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChatResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string[]))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string[]))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string[]))]
+        public async Task<ActionResult<ChatResponse>> Update(
             [FromBody] UpdateChatNameRequest request)
         {
             try

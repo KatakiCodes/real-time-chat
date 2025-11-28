@@ -12,15 +12,17 @@ public class ChatService : IChatService
 {
     private readonly IChatRepository _Repository;
     private readonly IUserService _UserService;
+    private readonly IUser_ChatService _User_ChatService;
     private readonly IMapper _Mapper;
     private ResponseModel<ChatResponse?> ResponseModel;
 
-    public ChatService(IMapper mapper,IUserService userService,IChatRepository repository)
+    public ChatService(IMapper mapper, IUserService userService, IChatRepository repository, IUser_ChatService user_ChatService)
     {
         _Repository = repository;
         _UserService = userService;
         _Mapper = mapper;
         ResponseModel = new();
+        _User_ChatService = user_ChatService;
     }
 
     public async Task<ResponseModel<ChatResponse?>> CreateAsync(CreateChatRequest request)
@@ -37,7 +39,11 @@ public class ChatService : IChatService
 
             var requestEncrypted = request with {Code = BCrypt.Net.BCrypt.HashPassword(request.Code)};
             Chat chat = _Mapper.Map<Chat>(requestEncrypted);
+            
             chat = await _Repository.CreateAsync(chat);
+
+            await _User_ChatService.CreateAsync(new CreateUser_ChatRequest(userId:chat.UserId,chatId:chat.Id,isAdmin:true));
+
             return ResponseModel.CREATED(_Mapper.Map<ChatResponse>(chat));
         }
     }
@@ -56,6 +62,23 @@ public class ChatService : IChatService
         foreach (Chat chat in chats)
             responseList.Add(_Mapper.Map<ChatResponse>(chat));
         return new ResponseModel<IEnumerable<ChatResponse>>().OK(responseList);
+    }
+
+    public async Task<ResponseModel<IEnumerable<UserResponse>>> GetUsersAsync(int chatId)
+    {
+        var tryFindChat = await _Repository.GetByIdAsync(chatId);
+        if (tryFindChat is null)
+            return new ResponseModel<IEnumerable<UserResponse>>().NOTFOUND(["Chat not found."]);
+
+        var userResponses = new List<UserResponse>();   
+        var usersInChat = await _User_ChatService.GetByChatId(chatId);
+        foreach(var userChat in usersInChat.Data!)
+        {
+            var user = await _UserService.GetByIdAsync(userChat.UserId);
+            if(user.Data is not null)
+                userResponses.Add(user.Data);
+        }
+        return new ResponseModel<IEnumerable<UserResponse>>().OK(userResponses);
     }
 
     public async Task<ResponseModel<ChatResponse?>> UpdateChatNameAsync(UpdateChatNameRequest request)

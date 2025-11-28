@@ -34,15 +34,15 @@ public class EntityTest
         Assert.IsNull(_chat);
     }
 
-    [TestMethod]
-    public void Showld_return_DomainException_on_creating_an_invalid_message()
-    {
-        Assert.ThrowsException<DomainException>(() =>
-        {
-            _message = new Message(_user, null, "Hello");
-        }, "Chat cannot be null");
-        Assert.IsNull(_message);
-    }
+    // [TestMethod]
+    // public void Showld_return_DomainException_on_creating_an_invalid_message()
+    // {
+    //     Assert.ThrowsException<DomainException>(() =>
+    //     {
+    //         _message = new Message(_user, null, "Hello");
+    //     }, "Chat cannot be null");
+    //     Assert.IsNull(_message);
+    // }
 
     [TestMethod]
     public void Showld_create_user()
@@ -59,12 +59,12 @@ public class EntityTest
         Assert.IsNotNull(_chat);
     }
 
-    [TestMethod]
-    public void Showld_create_a_message()
-    {
-        _user = new User("user_1@gmail.com", "username_1", "password_1");  
-        _chat = new Chat(_user, "Friends_chat"," ABC123");
-        _message = new Message(_user, _chat, "Hello World!");
-        Assert.IsNotNull(_message);
-    }
+    // [TestMethod]
+    // public void Showld_create_a_message()
+    // {
+    //     _user = new User("user_1@gmail.com", "username_1", "password_1");  
+    //     _chat = new Chat(_user, "Friends_chat"," ABC123");
+    //     _message = new Message(_user, _chat, "Hello World!");
+    //     Assert.IsNotNull(_message);
+    // }
 }

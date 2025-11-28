@@ -3,6 +3,7 @@ using realtime_chat_api.DTOs.Requests;
 using realtime_chat_api.DTOs.Responses;
 using realtime_chat_api.DTOs.Validations;
 using realtime_chat_api.Entities;
+using realtime_chat_api.Enums;
 using realtime_chat_api.Repositories.Interface;
 using realtime_chat_api.Services.Interface;
 
@@ -11,15 +12,13 @@ namespace realtime_chat_api.Services;
 public class MessageService : IMessageService
 {
     private IMessageRepository _Repository;
-    private IUserService _UserService;
-    private IChatService _ChatService;
+    private IUser_ChatService _UserChatService;
     private readonly IMapper _Mapper;
     private ResponseModel<MessageResponse> ResponseModel;
-    public MessageService(IMapper mapper, IUserService userService, IChatService chatService, IMessageRepository repository)
+    public MessageService(IMapper mapper, IUser_ChatService userChatService, IMessageRepository repository)
     {
         _Repository = repository;
-        _UserService = userService;
-        _ChatService = chatService;
+        _UserChatService = userChatService;
         _Mapper = mapper;
         ResponseModel = new();
     }
@@ -32,15 +31,18 @@ public class MessageService : IMessageService
             if (!validationResult.IsValid)
                 return ResponseModel.BADREQUEST(validationResult.Errors.Select(e => e.ErrorMessage));
 
-            ResponseModel<UserResponse?> findUser = await _UserService.GetByIdAsync(request.GetUserId());
-            ResponseModel<ChatResponse?> findChat = await _ChatService.GetByIdAsync(request.ChatId);
-            if (findUser.Data is null)
-                return ResponseModel.UNAUTHORIZED(["Invalid User."]);
-            if (findChat.Data is null)
-                return ResponseModel.NOTFOUND(["Chat not found."]);
+            ResponseModel<User_ChatResponse?> findUserChat = await _UserChatService.GetByIdAsync(request.User_ChatId);
+
+            if (findUserChat.Data is null)
+                return ResponseModel.UNAUTHORIZED(["Invalid User_Chat."]);
+            if(findUserChat.Data.ActivityState != EUserChatActivityState.CAN_INTERACT.ToString())
+                return ResponseModel.UNAUTHORIZED(["You cannot interact in this chat"]);
+
             Message message = _Mapper.Map<Message>(request);
             message = await _Repository.CreateAsync(message);
-            return ResponseModel.CREATED(_Mapper.Map<MessageResponse>(message));
+
+            var messageResponse = new MessageResponse(message.Id,message.Content,_Mapper.Map<User_ChatResponse>(message.User_Chat),message.Date,message.State);
+            return ResponseModel.CREATED(messageResponse);
         }
     }
 
@@ -65,9 +67,11 @@ public class MessageService : IMessageService
 
     public async Task<ResponseModel<IEnumerable<MessageResponse>>> GetByChatIdAsync(int chatId)
     {
-        ResponseModel<ChatResponse?> findChat = await _ChatService.GetByIdAsync(chatId);
-        if (findChat.Data is null)
-            return new ResponseModel<IEnumerable<MessageResponse>>().NOTFOUND(["Chat not found."]);
+        ResponseModel<User_ChatResponse?> findUserChat = await _UserChatService.GetByIdAsync(chatId);
+
+        if (findUserChat.Data is null)
+            return new ResponseModel<IEnumerable<MessageResponse>>().NOTFOUND(["User_Chat not found."]);
+
         IEnumerable<Message> messages = await _Repository.GetMessagesByChatIdAsync(chatId);
         List<MessageResponse> response = [];
         foreach (Message message in messages)
@@ -75,11 +79,11 @@ public class MessageService : IMessageService
         return new ResponseModel<IEnumerable<MessageResponse>>().OK(response);
     }
 
-    public async Task<ResponseModel<MessageResponse?>> DeleteMessageAsync(int id)
+    public async Task<ResponseModel<MessageResponse>?> DeleteMessageAsync(int id)
     {
         var findMessage = await _Repository.GetByIdAsync(id);
         if (findMessage is null)
-            return ResponseModel.NOTFOUND(["Message not found"]);
+            return ResponseModel.NOTFOUND(["Message not found."]);
         findMessage.DeleteMessage();
         findMessage = await _Repository.UpdateAsync(findMessage);
         return ResponseModel.OK(_Mapper.Map<MessageResponse>(findMessage))!;

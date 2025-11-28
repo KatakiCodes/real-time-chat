@@ -1,6 +1,4 @@
-using System;
 using AutoMapper;
-using FluentValidation.Results;
 using realtime_chat_api.DTOs.Requests;
 using realtime_chat_api.DTOs.Responses;
 using realtime_chat_api.DTOs.Validations;
@@ -40,6 +38,7 @@ public class UserService : IUserService
         }
     }
 
+
     public async Task<ResponseModel<UserResponse?>> GetByIdAsync(int userId)
     {
         User? findUser = await _Repository.GetByIdAsync(userId);
@@ -48,21 +47,6 @@ public class UserService : IUserService
         return ResponseModel.OK(_Mapper.Map<UserResponse>(findUser));
     }
 
-    public async Task<ResponseModel<LoginResponse?>> Login(LoginRequest request)
-    {
-        ResponseModel<LoginResponse?> response = new();
-        using(var validator = new LoginRequestValidation())
-        {
-            var validationResult = validator.Validate(request);
-            if (!validationResult.IsValid)
-                return response.BADREQUEST(validationResult.Errors.Select(x => x.ErrorMessage))!;
-            var findUser = await _Repository.GetUserByEmailAsync(request.Email);
-            if ((findUser is null) || (BCrypt.Net.BCrypt.Verify(request.Password, findUser.Password) == false))
-                return response.UNAUTHORIZED(["Email or Password invalid."]);
-            var loginResponse = new LoginResponse(new TokenService(this._Configuration).Generate(findUser));
-            return response.OK(loginResponse);
-        }
-    }
 
     public async Task<ResponseModel<UserResponse?>>UpdateUserNameAsync(UpdateUsernameRequest request)
     {

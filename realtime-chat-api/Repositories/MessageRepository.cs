@@ -17,17 +17,17 @@ public class MessageRepository : IMessageRepository
     {
         await _Context.Messages.AddAsync(entity);
         await _Context.SaveChangesAsync();
-        return entity;
+        return await GetByIdAsync(entity.Id);
     }
 
-    public async Task<Message?> GetByIdAsync(int id) => await _Context.Messages.FindAsync(id);
+    public async Task<Message?> GetByIdAsync(int id) => await _Context.Messages.Include(m=>m.User_Chat).FirstOrDefaultAsync(m=>m.Id == id); 
 
-    public async Task<IEnumerable<Message>> GetMessagesByChatIdAsync(int chatId)=> await _Context.Messages.AsNoTracking().Where(m => m.ChatId == chatId).ToListAsync();
+    public async Task<IEnumerable<Message>> GetMessagesByChatIdAsync(int chatId)=> await _Context.Messages.Include(m=>m.User_Chat).AsNoTracking().Where(m => m.User_Chat.ChatId == chatId).ToListAsync();
 
     public async Task<Message> UpdateAsync(Message entity)
     {
         _Context.Messages.Update(entity);
         await _Context.SaveChangesAsync();
-        return entity;
+        return await GetByIdAsync(entity.Id);
     }
 }

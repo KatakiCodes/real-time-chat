@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Minha API",
+        Title = "Realtime Chat API",
         Version = "v1"
     });
 
@@ -29,7 +29,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Insira o token JWT assim: Bearer {seu token}"
+        Description = "Insira apenas o token JWT"
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -71,8 +71,10 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IUser_ChatService, User_ChatService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();

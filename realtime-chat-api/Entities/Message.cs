@@ -6,36 +6,32 @@ namespace realtime_chat_api.Entities;
 
 public class Message : Entity
 {
-    public int UserId { get; private set; }
-    public int ChatId { get; private set; }
-    public User User { get; private set; }
-    public Chat Chat { get; private set; }
+    public int User_ChatId { get; private set; }
+    public User_Chat User_Chat { get; private set; }
     public string Content { get; private set; }
     public DateTime Date { get; private set; }
     public EMessageState State { get; private set; }
 
     public Message()
-    { }
-    public Message(User user, Chat chat, string content)
     {
-        DomainException.When(user is null, "User cannot be empty");
-        DomainException.When(chat is null, "Chat cannot be empty");
+        Date = DateTime.UtcNow;
+    }
+    public Message(User_Chat user_chat, string content)
+    {
+        DomainException.When(user_chat is null, "User cannot be empty");
         DomainException.When(string.IsNullOrEmpty(content), "Content cannot be empty");
-        User = user!;
-        Chat = chat!;
-        UserId = user!.Id;
-        ChatId = chat!.Id;
+        User_Chat = user_chat!;
+        User_ChatId = user_chat!.Id;
         Content = content;
-        Date = DateTime.Now;
+        Date = DateTime.UtcNow;
         State = EMessageState.Sent;
     }
-    public Message(int id, User user, Chat chat, string content) : base(id)
+    public Message(int id, User_Chat user_chat, string content) : base(id)
     {
-        DomainException.When(user is null, "User cannot be empty");
-        DomainException.When(chat is null, "Chat cannot be empty");
+        DomainException.When(user_chat is null, "User cannot be empty");
         DomainException.When(string.IsNullOrEmpty(content), "Content cannot be empty");
-        User = user!;
-        Chat = chat!;
+        User_Chat = user_chat!;
+        User_ChatId = user_chat!.Id;
         Content = content;
         Date = DateTime.Now;
         State = EMessageState.Sent;
