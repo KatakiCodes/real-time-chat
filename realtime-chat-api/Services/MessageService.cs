@@ -4,6 +4,7 @@ using realtime_chat_api.DTOs.Responses;
 using realtime_chat_api.DTOs.Validations;
 using realtime_chat_api.Entities;
 using realtime_chat_api.Enums;
+using realtime_chat_api.Hubs.Interface;
 using realtime_chat_api.Repositories.Interface;
 using realtime_chat_api.Services.Interface;
 
@@ -14,13 +15,15 @@ public class MessageService : IMessageService
     private IMessageRepository _Repository;
     private IUser_ChatService _UserChatService;
     private readonly IMapper _Mapper;
+    private readonly IChatHub _ChatHub;
     private ResponseModel<MessageResponse> ResponseModel;
-    public MessageService(IMapper mapper, IUser_ChatService userChatService, IMessageRepository repository)
+    public MessageService(IMapper mapper, IUser_ChatService userChatService, IMessageRepository repository, IChatHub chatHub)
     {
         _Repository = repository;
         _UserChatService = userChatService;
         _Mapper = mapper;
         ResponseModel = new();
+        _ChatHub = chatHub;
     }
 
     public async Task<ResponseModel<MessageResponse>> CreateAsync(CreateMessageRequest request)
@@ -42,6 +45,8 @@ public class MessageService : IMessageService
             message = await _Repository.CreateAsync(message);
 
             var messageResponse = new MessageResponse(message.Id,message.Content,_Mapper.Map<User_ChatResponse>(message.User_Chat),message.Date,message.State);
+
+            await _ChatHub.SendMessage(messageResponse);
             return ResponseModel.CREATED(messageResponse);
         }
     }
@@ -60,7 +65,9 @@ public class MessageService : IMessageService
                 return ResponseModel.NOTFOUND(["Message not found."]);
             findMessage.UpdateContent(request.Content);
             findMessage = await _Repository.UpdateAsync(findMessage);
-            return ResponseModel.OK(_Mapper.Map<MessageResponse>(findMessage));
+            var MessageResponse = _Mapper.Map<MessageResponse>(findMessage);
+            await _ChatHub.SendMessage(MessageResponse);
+            return ResponseModel.OK(MessageResponse);
         }
 
     }
@@ -86,6 +93,10 @@ public class MessageService : IMessageService
             return ResponseModel.NOTFOUND(["Message not found."]);
         findMessage.DeleteMessage();
         findMessage = await _Repository.UpdateAsync(findMessage);
-        return ResponseModel.OK(_Mapper.Map<MessageResponse>(findMessage))!;
+
+        var MessageResponse = _Mapper.Map<MessageResponse>(findMessage);
+        await _ChatHub.SendMessage(MessageResponse);
+        
+        return ResponseModel.OK(MessageResponse);
     }
 }
