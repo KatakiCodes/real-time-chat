@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using realtime_chat_api.Data;
+using realtime_chat_api.Hubs;
+using realtime_chat_api.Hubs.Interface;
 using realtime_chat_api.Repositories;
 using realtime_chat_api.Repositories.Interface;
 using realtime_chat_api.Services;
@@ -81,6 +83,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IUser_ChatRepository, User_ChatRepository>();
+builder.Services.AddScoped<IChatHub, ChatHub>();
 
 var app = builder.Build();
 
@@ -92,7 +95,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapHub<realtime_chat_api.Hubs.ChatHub>("/chathub");
+app.MapHub<ChatHub>("/hub/chathub");
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
