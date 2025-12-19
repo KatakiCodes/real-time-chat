@@ -6,9 +6,7 @@ Este projeto foi criado **exclusivamente para fins de estudo e prática**, com f
 
 - Consolidação de conceitos de desenvolvimento backend
 - Implementação de comunicação em **tempo real**
-- Aplicação de boas práticas de arquitetura e organização de código
 - Uso de containers Docker para padronizar ambientes
-- Criação de um projeto sólido para **portfólio profissional**
 
 > ⚠️ Este projeto **não é recomendado para uso em produção** sem ajustes adicionais de segurança, testes automatizados e otimizações.
 
