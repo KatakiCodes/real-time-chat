@@ -12,7 +12,7 @@ using realtime_chat_api.Services;
 using realtime_chat_api.Services.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Configuration.AddEnvironmentVariables();
 // Add services to the container.
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(options =>
