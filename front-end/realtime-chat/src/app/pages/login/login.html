@@ -1,19 +1,11 @@
-<div class="login flex justify-center items-center">
-
-    <div
-        class="login-container flex rounded-lg md:w-2/3 w-full items-start justify-center md:justify-between bg-white ">
-
-        <div class="ilustration-section md:w-1/2 w-0">
-            <img src="/images/29210394_38.jpg" alt="chat ballon ilustration" class="w-full min-h-90 h-full rounded-lg" />
-        </div>
-
-        <div class="input-section md:w-1/2 w-full p-4 flex flex-col items-center">
+<app-introduce-layout>
+    <div class="input-section md:w-1/2 w-full p-4 flex flex-col items-center">
             <h2 class="text-2xl text-center mb-6 text-blue-500 mt-4">Bem-vindo</h2>
             <form action="" method="post" class="flex flex-col gap-2 justify-center items-center w-full">
-                <div class="form__email text-center w-full">
+                <div class="form__email w-2/3 text-center">
                     <app-text-input type="email" placeholder="E-mail" class="mb-2" ></app-text-input>
                 </div>
-                <div class="form__password text-center w-full">
+                <div class="form__password w-2/3 text-center">
                     <app-text-input type="password" placeholder="Palavra-passe"></app-text-input>
                 </div>
                 <div class="w-2/3 mt-4">
@@ -25,9 +17,4 @@
                 <app-button-primary-outlined [text]="'Criar conta'" ></app-button-primary-outlined>
             </div>
         </div>
-
-    </div>
-    <footer>
-        <small class="text-gray-500">powered by Nelson Dos Santos &copy; 2025/2026</small>
-    </footer>
-</div>
+</app-introduce-layout>

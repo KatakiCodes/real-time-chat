@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Login } from './pages/login/login';
+import { CreateAccount } from './pages/create-account/create-account';
 
 const routes: Routes = [
-  { path: '', component: Login, pathMatch: 'full'},
+  { path: 'login', component: Login, pathMatch: 'full'},
+  { path: 'new-account', component: CreateAccount, pathMatch: 'full'},
 ];
 
 @NgModule({
