@@ -1,11 +1,12 @@
 <div class="introduce-layout flex justify-center items-center">
 
-    <div
-        class="login-container flex rounded-lg md:w-2/3 w-full items-start justify-center md:justify-between bg-white ">
+    <div class="container flex rounded-lg md:w-auto md:max-w-4xl w-full items-center justify-center md:justify-between bg-white">
 
+        @if(showIlustration){
         <div class="ilustration-section md:w-1/2 w-0">
-            <img src="/images/29210394_38.jpg" alt="chat ballon ilustration" class="w-full min-h{{ heightIlustration }} rounded-lg" />
+            <img src="/images/29210394_38.jpg" alt="chat ballon ilustration" class="w-full min-h-90 rounded-lg" />
         </div>
+        }
         <ng-content>
 
         </ng-content>

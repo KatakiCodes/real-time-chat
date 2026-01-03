@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './introduce-layout.scss',
 })
 export class IntroduceLayout {
-  @Input() heightIlustration: string = '-full';
+  @Input() showIlustration: boolean = true;
 }
