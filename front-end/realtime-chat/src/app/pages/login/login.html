@@ -1,12 +1,14 @@
 <app-introduce-layout>
     <div class="input-section md:w-1/2 w-full p-4 flex flex-col justify-center items-center">
             <h2 class="text-2xl text-center mb-6 text-blue-500 mt-4">Bem-vindo</h2>
-            <form action="" method="post" class="flex flex-col gap-2 justify-center items-center w-full">
+            <form action="" method="post" class="flex flex-col gap-3 justify-center items-center w-full">
                 <div class="form__email w-2/3 text-center">
-                    <app-text-input type="email" placeholder="E-mail" class="mb-2" ></app-text-input>
+                    <label for="email" class="block text-sm text-gray-700 mb-1 text-left w-full">E-mail</label>
+                    <app-text-input id="email" type="email" placeholder="E-mail" class="mb-3" ></app-text-input>
                 </div>
                 <div class="form__password w-2/3 text-center">
-                    <app-text-input type="password" placeholder="Palavra-passe"></app-text-input>
+                    <label for="password" class="block text-sm text-gray-700 mb-1 text-left w-full">Palavra-passe</label>
+                    <app-text-input id="password" type="password" placeholder="Palavra-passe" class="mb-3"></app-text-input>
                 </div>
                 <div class="w-2/3 mt-4">
                     <app-button-primary [text]="'Entrar'" ></app-button-primary>
