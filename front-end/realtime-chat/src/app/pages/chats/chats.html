@@ -1,10 +1,17 @@
-<div class="chats w-full h-full bg-purple-100 flex">
+<div class="chats w-full h-full flex bg-gray-200">
     <div class="md:w-1/5 w-0 h-full">
         <app-side-bar></app-side-bar>
     </div>
     <div class="w-4/5 h-full">
-        <ng-content>
-
-        </ng-content>
+        @if(!hasRoom){
+            <div class="flex h-full w-full items-center justify-center">
+                <h3 class="text-lg text-gray-500" >Nenhum chat selecionado</h3>
+            </div>
+        }
+        @else {
+            <div class="h-full w-full overflow-hidden">
+                <app-room></app-room>
+            </div>
+        }
     </div>
 </div>

@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './chats.scss',
 })
 export class Chats {
-
+  hasRoom:boolean = true;
 }

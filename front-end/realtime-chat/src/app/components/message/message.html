@@ -1,0 +1,19 @@
+<div class="w-full flex {{ isMessageFromCurrentUser ? 'justify-end' : 'justify-start' }} mb-2">
+    <div class="message-container max-w-3/5 p-4">
+        <div class="flex {{ isMessageFromCurrentUser ? 'flex-row-reverse' : 'flex-row' }} gap-2">
+            <div class="avatar">
+                <img [src]="'/images/user.png'" alt="User Avatar" class="w-10 h-10 rounded-full mr-3">
+            </div>
+            <div class="content">
+                <div class="message-header flex gap-2 items-center mb-2 {{ isMessageFromCurrentUser ? 'flex-row-reverse' : 'flex-row' }}">
+                    <h3 class="text-sm font-semibold"> Nelson Dos Santos</h3>
+                    <span class="text-sm text-gray-500">12/11/25</span>
+                </div>
+                <div
+                    class="message-content bg-{{ isMessageFromCurrentUser ? 'blue-500' : 'white' }} p-4 rounded-lg shadow-sm">
+                    <p class="text-{{ isMessageFromCurrentUser ? 'white' : 'gray-800' }}">{{ message }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
