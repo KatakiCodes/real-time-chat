@@ -1,0 +1,25 @@
+<div class="room w-full h-full">
+    <header class="room-header shadow-sm w-full h-1/11 bg-white flex items-center justify-between py-2 px-4">
+        <div class="header-info flex flex-col">
+            <h2 class="text-2xl text-blue-500 ">Familias</h2>
+            <small class="text-gray-500" >5 Membros</small>
+        </div>
+        <div class="header-actions">
+            <app-button-primary-outlined [text]="'Adicionar membro'" ></app-button-primary-outlined>
+        </div>
+    </header>
+    <main class="room-main w-full h-9/11 overflow-y-auto">
+        <app-message [isCurrentUser]="true" [message]="'Olá, tudo bem?'"></app-message>
+        <app-message [isCurrentUser]="false" [message]="'Sim, obrigado! E você?'"></app-message>
+        <app-message [isCurrentUser]="true" [message]="'Estou bem também. Obrigado por perguntar.'"></app-message>
+        <app-message [isCurrentUser]="false" [message]="'Que legal! Vamos conversar mais tarde?'"></app-message>
+        <app-message [isCurrentUser]="true" [message]="'Claro! Estou disponível agora.'"></app-message>
+        <app-message [isCurrentUser]="false" [message]="'Ótimo, então nos vemos mais tarde.'"></app-message>
+    </main>
+    <footer class="send-message w-full h-1/11 bg-white shadow-inner flex items-center gap-4 px-4">
+        <div class="w-[90%]">
+            <app-text-input [placeholder]="'Digite sua mensagem aqui...'" ></app-text-input>
+        </div>
+        <app-button-primary [text]="'Enviar'"></app-button-primary>
+    </footer>
+</div>
