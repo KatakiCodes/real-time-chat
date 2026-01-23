@@ -2,23 +2,44 @@
     <header class="room-header shadow-sm w-full h-1/11 bg-white flex items-center justify-between py-2 px-4">
         <div class="header-info flex flex-col">
             <h2 class="text-2xl text-blue-500 ">Familias</h2>
-            <small class="text-gray-500" >5 Membros</small>
+            <small class="text-gray-500">5 Membros</small>
         </div>
-        <div class="header-actions">
-            <app-button-primary-outlined [text]="'Adicionar membro'" ></app-button-primary-outlined>
+        <div class="header-actions w-8 h-8 rotate-90" (click)="toggleOptions($event)">
+            <div
+                class="w-full h-full flex items-center justify-center cursor-pointer hover:bg-gray-200 rounded-full p-2 rotate-90">
+                <img src="/images/more.png" alt="more details" class="w-4 h-4 mx-auto my-auto" />
+            </div>
         </div>
+        @if(this.showOptions){
+            <section class="absolute shadow-md border-1 border-gray-200 bg-white p-4 right-8 top-16 rounded-md">
+                <ul class="flex flex-col gap-4 text-gray-500">
+                    <li><a class="hover:text-blue-500 block" href="">Adiciona novo membro</a></li>
+                    <hr class="border-gray-200">
+                    <li><a class="hover:text-blue-500 block" href="">Alterar o nome do chat</a></li>
+                    <hr class="border-gray-200">
+                    <li><a class="hover:text-red-800 block " href="">Excluir chat</a></li>
+                </ul>
+            </section>
+        }
     </header>
     <main class="room-main w-full h-9/11 overflow-y-auto">
-        <app-message [isCurrentUser]="true" [message]="'Olá, tudo bem?'"></app-message>
-        <app-message [isCurrentUser]="false" [message]="'Sim, obrigado! E você?'"></app-message>
-        <app-message [isCurrentUser]="true" [message]="'Estou bem também. Obrigado por perguntar.'"></app-message>
-        <app-message [isCurrentUser]="false" [message]="'Que legal! Vamos conversar mais tarde?'"></app-message>
-        <app-message [isCurrentUser]="true" [message]="'Claro! Estou disponível agora.'"></app-message>
-        <app-message [isCurrentUser]="false" [message]="'Ótimo, então nos vemos mais tarde.'"></app-message>
+        @if(!showAddMember){
+            <div class="h-full w-full bg-gray-100 py-4">
+                <app-add-member></app-add-member>
+            </div>
+        }
+        @else {
+            <app-message [isCurrentUser]="true" [message]="'Olá, tudo bem?'"></app-message>
+            <app-message [isCurrentUser]="false" [message]="'Sim, obrigado! E você?'"></app-message>
+            <app-message [isCurrentUser]="true" [message]="'Estou bem também. Obrigado por perguntar.'"></app-message>
+            <app-message [isCurrentUser]="false" [message]="'Que legal! Vamos conversar mais tarde?'"></app-message>
+            <app-message [isCurrentUser]="true" [message]="'Claro! Estou disponível agora.'"></app-message>
+            <app-message [isCurrentUser]="false" [message]="'Ótimo, então nos vemos mais tarde.'"></app-message>
+            }
     </main>
     <footer class="send-message w-full h-1/11 bg-white shadow-inner flex items-center gap-4 px-4">
         <div class="w-[90%]">
-            <app-text-input [placeholder]="'Digite sua mensagem aqui...'" ></app-text-input>
+            <app-text-input [placeholder]="'Digite sua mensagem aqui...'"></app-text-input>
         </div>
         <app-button-primary [text]="'Enviar'"></app-button-primary>
     </footer>

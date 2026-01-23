@@ -6,15 +6,19 @@ import { Room } from './room/room';
 import { Message } from './message/message';
 import { BrowserModule } from "@angular/platform-browser";
 import { CommonModule } from "@angular/common";
+import { AddMember } from "./add-member/add-member";
+
 
 
 @NgModule({
     declarations: [
     SideBar,
     Room,
-    Message
+    Message,
+    AddMember
+,
   ],
     imports: [ButtonsModule, InputsModule, BrowserModule, CommonModule],
-    exports: [ButtonsModule,InputsModule,SideBar, Room, CommonModule],
+    exports: [ButtonsModule,InputsModule,SideBar, Room, CommonModule, Message, AddMember],
 })
 export class ComponentsModule {}

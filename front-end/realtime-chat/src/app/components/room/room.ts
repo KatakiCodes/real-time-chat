@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-room',
@@ -7,5 +7,18 @@ import { Component } from '@angular/core';
   styleUrl: './room.scss',
 })
 export class Room {
+  showOptions: boolean = false;
+  showAddMember: boolean = false;
 
+  toggleOptions(event:MouseEvent) {
+    event.stopPropagation();
+    this.showOptions = !this.showOptions;
+  }
+  closeOptions() {
+    this.showOptions = false;
+  }
+  @HostListener('click',['$event'])
+  onDocumentClick(event:MouseEvent){
+    this.closeOptions();
+  }
 }
