@@ -1,6 +1,6 @@
 <div class="p-4">
     <div class="flex gap-1 mb-4">
-        <button class="bg-gray-300 rounded-full w-8 h-8">
+        <button class="bg-gray-300 rounded-full w-8 h-8" (click)="emmitGoBack()" >
             <
         </button>
         <h1 class="text-xl mb-4">Adicionar Membro</h1>
@@ -36,7 +36,7 @@
                     <td class="p-2">João Silva</td>
                     <td class="p-2">joao.silva@example.com</td>
                     <td class="p-2">
-                        <app-button-primary [text]="'Adicionar'"></app-button-primary>
+                        <app-button-danger [text]="'Remover'"></app-button-danger>
                     </td>
                 </tr>
                 <tr class="border-b border-gray-200">
@@ -52,7 +52,7 @@
                     <td class="p-2">João Silva</td>
                     <td class="p-2">joao.silva@example.com</td>
                     <td class="p-2">
-                        <app-button-primary [text]="'Adicionar'"></app-button-primary>
+                        <app-button-danger [text]="'Remover'"></app-button-danger>
                     </td>
                 </tr>
                 <tr class="border-b border-gray-200">
@@ -68,7 +68,7 @@
                     <td class="p-2">João Silva</td>
                     <td class="p-2">joao.silva@example.com</td>
                     <td class="p-2">
-                        <app-button-primary [text]="'Adicionar'"></app-button-primary>
+                        <app-button-danger [text]="'Remover'"></app-button-danger>
                     </td>
                 </tr>
                 <tr class="border-b border-gray-200">

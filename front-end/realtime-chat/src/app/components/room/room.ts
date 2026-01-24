@@ -21,4 +21,10 @@ export class Room {
   onDocumentClick(event:MouseEvent){
     this.closeOptions();
   }
+  toggleShowAddMember(){
+    this.showAddMember = !this.showAddMember;
+  }
+  closeAddMember(){
+    this.showAddMember = false;
+  }
 }

@@ -11,31 +11,35 @@
             </div>
         </div>
         @if(this.showOptions){
-            <section class="absolute shadow-md border-1 border-gray-200 bg-white p-4 right-8 top-16 rounded-md">
-                <ul class="flex flex-col gap-4 text-gray-500">
-                    <li><a class="hover:text-blue-500 block" href="">Adiciona novo membro</a></li>
+        <section class="absolute shadow-md border-1 border-gray-200 bg-white p-4 right-8 top-16 rounded-md">
+            <ul class="flex flex-col gap-4 text-gray-500">
+                @if(showAddMember === false){
+                    <li>
+                        <a class="hover:text-blue-500 block" (click)="toggleShowAddMember()">Membros</a>
+                    </li>
                     <hr class="border-gray-200">
-                    <li><a class="hover:text-blue-500 block" href="">Alterar o nome do chat</a></li>
-                    <hr class="border-gray-200">
-                    <li><a class="hover:text-red-800 block " href="">Excluir chat</a></li>
-                </ul>
-            </section>
+                }
+                <li><a class="hover:text-blue-500 block" href="">Alterar o nome do chat</a></li>
+                <hr class="border-gray-200">
+                <li><a class="hover:text-red-800 block " href="">Excluir chat</a></li>
+            </ul>
+        </section>
         }
     </header>
     <main class="room-main w-full h-9/11 overflow-y-auto">
-        @if(!showAddMember){
-            <div class="h-full w-full bg-gray-100 py-4">
-                <app-add-member></app-add-member>
-            </div>
+        @if(showAddMember === true){
+        <div class="h-full w-full bg-gray-100 py-4">
+            <app-add-member (goBack)="closeAddMember()"></app-add-member>
+        </div>
         }
         @else {
-            <app-message [isCurrentUser]="true" [message]="'Olá, tudo bem?'"></app-message>
-            <app-message [isCurrentUser]="false" [message]="'Sim, obrigado! E você?'"></app-message>
-            <app-message [isCurrentUser]="true" [message]="'Estou bem também. Obrigado por perguntar.'"></app-message>
-            <app-message [isCurrentUser]="false" [message]="'Que legal! Vamos conversar mais tarde?'"></app-message>
-            <app-message [isCurrentUser]="true" [message]="'Claro! Estou disponível agora.'"></app-message>
-            <app-message [isCurrentUser]="false" [message]="'Ótimo, então nos vemos mais tarde.'"></app-message>
-            }
+        <app-message [isCurrentUser]="true" [message]="'Olá, tudo bem?'"></app-message>
+        <app-message [isCurrentUser]="false" [message]="'Sim, obrigado! E você?'"></app-message>
+        <app-message [isCurrentUser]="true" [message]="'Estou bem também. Obrigado por perguntar.'"></app-message>
+        <app-message [isCurrentUser]="false" [message]="'Que legal! Vamos conversar mais tarde?'"></app-message>
+        <app-message [isCurrentUser]="true" [message]="'Claro! Estou disponível agora.'"></app-message>
+        <app-message [isCurrentUser]="false" [message]="'Ótimo, então nos vemos mais tarde.'"></app-message>
+        }
     </main>
     <footer class="send-message w-full h-1/11 bg-white shadow-inner flex items-center gap-4 px-4">
         <div class="w-[90%]">

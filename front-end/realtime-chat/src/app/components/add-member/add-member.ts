@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-add-member',
@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './add-member.scss',
 })
 export class AddMember {
+  @Output() goBack = new EventEmitter<boolean>();
 
+  emmitGoBack(){
+    this.goBack.emit();
+  }
 }
