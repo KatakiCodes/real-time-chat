@@ -1,8 +1,6 @@
 <div class="p-4">
-    <div class="flex gap-1 mb-4">
-        <button class="bg-gray-300 rounded-full w-8 h-8" (click)="emmitGoBack()" >
-            <
-        </button>
+    <div class="flex gap-4 mb-4">
+        <button class="bg-gray-300 rounded-full h-8 w-8 cursor-pointer" (click)="emmitGoBack()" ><img src="/images/left-arrow.png" alt="left-arrow icon" class="w-3 h-3 m-auto"></button>
         <h1 class="text-xl mb-4">Adicionar Membro</h1>
     </div>
     <form action="www.google.com" method="get" class="add-member-form w-full flex items-center gap-1">
@@ -49,8 +47,8 @@
 
     @if(showConfirmationModal){
         <app-confirmation-modal
-            [title]="'Adicionar novo Membro'"
-            [message]="'Por favor, confirme a adição deste membro ao chat.'"
+            [title]="modalDangerMode ? 'Remover Membro' : 'Adicionar Membro'"
+            [message]=" modalDangerMode ? 'Tem certeza que deseja remover este membro do chat? Esta ação não pode ser desfeita.' : 'Por favor, confirme a adição deste novo membro ao chat.' "
             [confirmationCode]="'12345'"
             [isDanger]="modalDangerMode"
             (ConfirmActionModal)="confirm($event)"

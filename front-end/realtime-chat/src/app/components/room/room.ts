@@ -9,6 +9,7 @@ import { Component, HostListener } from '@angular/core';
 export class Room {
   showOptions: boolean = false;
   showAddMember: boolean = false;
+  showEditChatModal: boolean = false;
 
   toggleOptions(event:MouseEvent) {
     event.stopPropagation();
@@ -26,5 +27,14 @@ export class Room {
   }
   closeAddMember(){
     this.showAddMember = false;
+  }
+  openEditChatModal(){
+    this.showEditChatModal = true;
+  }
+  confirmEditChat($event:boolean){
+    if($event == true) this.closeEditChatModal();
+  }
+  closeEditChatModal(){
+    this.showEditChatModal = false;
   }
 }

@@ -15,13 +15,13 @@
             <ul class="flex flex-col gap-4 text-gray-500">
                 @if(showAddMember === false){
                     <li>
-                        <a class="hover:text-blue-500 block" (click)="toggleShowAddMember()">Membros</a>
+                        <a class="hover:text-blue-500 block cursor-pointer" (click)="toggleShowAddMember()">Membros</a>
                     </li>
                     <hr class="border-gray-200">
                 }
-                <li><a class="hover:text-blue-500 block" href="">Alterar o nome do chat</a></li>
+                <li><a class="hover:text-blue-500 block cursor-pointer " (click)="openEditChatModal()" >Alterar o nome do chat</a></li>
                 <hr class="border-gray-200">
-                <li><a class="hover:text-red-800 block " href="">Excluir chat</a></li>
+                <li><a class="hover:text-red-800 block cursor-pointer ">Excluir chat</a></li>
             </ul>
         </section>
         }
@@ -47,4 +47,12 @@
         </div>
         <app-button-primary [text]="'Enviar'"></app-button-primary>
     </footer>
+
+    @if(showEditChatModal === true){
+        <app-edit-chat [confirmationCode]="'12345'"
+        [title]="'Alterar o nome do chat'"
+        [message]="'Digite o novo nome do chat'"
+        (ConfirmActionModal)="confirmEditChat($event)"
+        (close)="closeEditChatModal()"></app-edit-chat>
+    }
 </div>
