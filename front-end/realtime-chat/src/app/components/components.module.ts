@@ -7,6 +7,7 @@ import { Message } from './message/message';
 import { BrowserModule } from "@angular/platform-browser";
 import { CommonModule } from "@angular/common";
 import { AddMember } from "./add-member/add-member";
+import { ModalsModule } from "./modals/modals.module";
 
 
 
@@ -18,7 +19,7 @@ import { AddMember } from "./add-member/add-member";
     AddMember
 ,
   ],
-    imports: [ButtonsModule, InputsModule, BrowserModule, CommonModule],
-    exports: [ButtonsModule,InputsModule,SideBar, Room, CommonModule, Message, AddMember],
+    imports: [ButtonsModule, InputsModule, BrowserModule, CommonModule, ModalsModule],
+    exports: [ButtonsModule,InputsModule,SideBar, Room, CommonModule, Message, AddMember, ModalsModule],
 })
 export class ComponentsModule {}

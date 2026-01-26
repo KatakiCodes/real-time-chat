@@ -1,0 +1,36 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+	<div role="dialog" aria-modal="true" aria-labelledby="confirmTitle" class="bg-white rounded-lg shadow-lg w-11/12 max-w-md mx-4">
+		<header class="px-6 py-4 border-b border-gray-400">
+			<h3 id="confirmTitle" class="text-lg font-semibold text-gray-800">{{ title }}</h3>
+		</header>
+
+		<section class="px-6 py-4">
+			<p class="text-sm text-gray-600 mb-4">{{ message }}</p>
+
+			@if(confirmationCode){
+			<div class="mb-4">
+				<app-text-input [placeholder]="'Digite o código aqui'" aria-label="Código de confirmação" class="w-full text-sm" (valueChange)="getInputValue($event)" ></app-text-input>
+                @if(errorResult){
+                <p class="text-sm text-red-600 mt-2">{{ errorResult }}</p>
+                }
+			</div>
+			}
+			@else{
+			<div class="mb-4">
+				<p class="text-sm text-gray-600">Confirme a operação abaixo.</p>
+			</div>
+			}
+		</section>
+
+		<footer class="px-6 py-4 border-t border-gray-400 flex justify-end gap-3">
+			<button (click)="close.emit()" class="px-4 py-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 transition">Cancelar</button>
+
+			@if(isDanger){
+			<app-button-danger (click)="ConfirmActionModal.emit(onConfirm())" [text]="'Confirmar'"></app-button-danger>
+			}
+			@else{
+			<app-button-primary (click)="ConfirmActionModal.emit(onConfirm())" [text]="'Confirmar'"></app-button-primary>
+			}
+		</footer>
+	</div>
+</div>

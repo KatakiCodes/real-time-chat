@@ -28,7 +28,9 @@
                     <td class="p-2">João Silva</td>
                     <td class="p-2">joao.silva@example.com</td>
                     <td class="p-2">
-                        <app-button-primary [text]="'Adicionar'"></app-button-primary>
+                        <button (click)="openModal()" class="flex text-blue-400 gap-1 p-2 rounded-lg bg-blue-50 hover:bg-blue-100 transition cursor-pointer">
+                            <span>Adicionar</span> <img src="/images/user-avatar.png" alt="avatar icon" class="h-6 w-6 m-auto cursor-pointer">
+                        </button>
                     </td>
                 </tr>
                 <tr class="border-b border-gray-200">
@@ -36,66 +38,27 @@
                     <td class="p-2">João Silva</td>
                     <td class="p-2">joao.silva@example.com</td>
                     <td class="p-2">
-                        <app-button-danger [text]="'Remover'"></app-button-danger>
+                        <button (click)="openModalDangerMode()" class="flex text-red-400 gap-2 p-2 rounded-lg bg-red-50 hover:bg-red-100 hover:bg-gray-300 transition cursor-pointer">
+                            <span>Remover</span> <img src="/images/delete.png" alt="trash icon" class="h-5 w-5 m-auto cursor-pointer">
+                        </button>
                     </td>
                 </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="p-2"><img class="w-10 h-10" src="/images/user.png" alt="user avatar"></td>
-                    <td class="p-2">João Silva</td>
-                    <td class="p-2">joao.silva@example.com</td>
-                    <td class="p-2">
-                        <app-button-primary [text]="'Adicionar'"></app-button-primary>
-                    </td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="p-2"><img class="w-10 h-10" src="/images/user.png" alt="user avatar"></td>
-                    <td class="p-2">João Silva</td>
-                    <td class="p-2">joao.silva@example.com</td>
-                    <td class="p-2">
-                        <app-button-danger [text]="'Remover'"></app-button-danger>
-                    </td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="p-2"><img class="w-10 h-10" src="/images/user.png" alt="user avatar"></td>
-                    <td class="p-2">João Silva</td>
-                    <td class="p-2">joao.silva@example.com</td>
-                    <td class="p-2">
-                        <app-button-primary [text]="'Adicionar'"></app-button-primary>
-                    </td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="p-2"><img class="w-10 h-10" src="/images/user.png" alt="user avatar"></td>
-                    <td class="p-2">João Silva</td>
-                    <td class="p-2">joao.silva@example.com</td>
-                    <td class="p-2">
-                        <app-button-danger [text]="'Remover'"></app-button-danger>
-                    </td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="p-2"><img class="w-10 h-10" src="/images/user.png" alt="user avatar"></td>
-                    <td class="p-2">João Silva</td>
-                    <td class="p-2">joao.silva@example.com</td>
-                    <td class="p-2">
-                        <app-button-primary [text]="'Adicionar'"></app-button-primary>
-                    </td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="p-2"><img class="w-10 h-10" src="/images/user.png" alt="user avatar"></td>
-                    <td class="p-2">João Silva</td>
-                    <td class="p-2">joao.silva@example.com</td>
-                    <td class="p-2">
-                        <app-button-primary [text]="'Adicionar'"></app-button-primary>
-                    </td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="p-2"><img class="w-10 h-10" src="/images/user.png" alt="user avatar"></td>
-                    <td class="p-2">João Silva</td>
-                    <td class="p-2">joao.silva@example.com</td>
-                    <td class="p-2">
-                        <app-button-primary [text]="'Adicionar'"></app-button-primary>
-                    </td>
-                </tr>  
             </tbody>
         </table>
     </section>
+
+    @if(showConfirmationModal){
+        <app-confirmation-modal
+            [title]="'Adicionar novo Membro'"
+            [message]="'Por favor, confirme a adição deste membro ao chat.'"
+            [confirmationCode]="'12345'"
+            [isDanger]="modalDangerMode"
+            (ConfirmActionModal)="confirm($event)"
+            (close)="closeModal()"
+        >
+        <app-text-input
+            [placeholder]="'Digite o código de confirmação aqui...'">
+        </app-text-input>
+        </app-confirmation-modal>
+    }
 </div>
